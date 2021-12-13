@@ -12,5 +12,12 @@ a {
 }
 
 * {
+  font-family: oxygen;
+  text-align: center;
   box-sizing: border-box;
+}
+
+@font-face {
+  font-family: oxygen;
+  src: url(Oxygen-Regular.ttf);
 }

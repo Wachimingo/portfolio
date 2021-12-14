@@ -1,5 +1,6 @@
-import type { NextPage, GetServerSideProps } from 'next';
-import { useEffect, useState } from 'react';
+import type { FC } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import AuthContext from './../../contexts/authContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import Spinner from '../../components/Spinner';
@@ -20,19 +21,13 @@ type Brand = {
     email: string;
 }
 
-interface CustomNavbarProps {
-    props: {
-        items: Array<Items>;
-        brand: Brand;
-    }
-}
-
-const CustomNavbar = () => {
+const CustomNavbar: FC = () => {
+    const { session } = useContext(AuthContext);
     const [isItemsLoaded, setIsItemsLoaded] = useState<Boolean>(false);
     const [isBrandLoaded, setIsBrandLoaded] = useState<Boolean>(false);
     const [items, setItems] = useState<Items[]>([]);
     const [brand, setBrand] = useState<Brand>({ name: 'Brand', bussinessType: '', location: {}, description: '', email: '' });
-    const session2 = { role: 'any' };
+    // const session2 = { role: 'any' };
     useEffect(() => {
         fetch('/api/navbar', {
             method: 'GET',
@@ -65,15 +60,15 @@ const CustomNavbar = () => {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul className="navbar-nav">
-                            <Link href='/' passHref>
-                                <li className="nav-item">
-                                    <a className="nav-link active" aria-current="page" href="#">Home</a>
-                                </li>
-                            </Link>
+                            <li className="nav-item">
+                                <Link href='/' passHref>
+                                    <a className="nav-link active" aria-current="page">Inicio</a>
+                                </Link>
+                            </li>
                             {
                                 items.map((item: Items) => {
                                     /**@param session.role from the current user session info, if it matches the nav element it will be render */
-                                    if (item.childObject && item.role.includes(session2.role)) {
+                                    if (item.childObject && item.role.includes(session !== null ? session.role : 'any')) {
                                         return (
                                             <li key={item.name} className="nav-item dropdown">
                                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -96,7 +91,7 @@ const CustomNavbar = () => {
                                             </li>
                                         )
                                     } else {
-                                        if (item.role.includes(session2.role)) {
+                                        if (item.role.includes(session !== null ? session.role : 'any')) {
                                             return (
                                                 <li key={item.name} className="nav-item">
                                                     <Link href={item.value} passHref>
@@ -109,14 +104,22 @@ const CustomNavbar = () => {
                                 })
                             }
                         </ul>
-                        <ul className="navbar-nav">
-                            <li>
-                                <Link href={'/auth/signin'} passHref>
-                                    <a className="nav-link active end-100" aria-current="page">Ingresar</a>
-                                </Link>
-                            </li>
-                        </ul>
                     </div>
+                    <ul className="navbar-nav">
+                        <li>
+                            <Link href={'/auth/signup'} passHref>
+                                <a className="nav-link active end-100" aria-current="page">Registrarse</a>
+                            </Link>
+                        </li>
+                        {/** Login/Logout link 
+                            * @session is the current user session info from the AuthContext provider, if it is null it will render the login link, if it is not null it will render the logout link
+                        */}
+                        <li>
+                            <Link href={!session ? '/auth/signin' : '/auth/signout'} passHref>
+                                <a className="nav-link active end-100" aria-current="page">{!session ? 'Ingresar' : 'Salir'}</a>
+                            </Link>
+                        </li>
+                    </ul>
                 </div>
             </nav>
         )

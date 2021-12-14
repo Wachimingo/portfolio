@@ -1,8 +1,11 @@
 import type { NextPage } from 'next';
+import { useContext } from 'react';
+import AuthContext from './../contexts/authContext'
 import Head from 'next/head';
 import Image from 'next/image';
 
 const Home: NextPage = () => {
+  const { session } = useContext(AuthContext);
   return (
     <div >
       <Head>

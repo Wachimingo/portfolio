@@ -5,7 +5,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 
 const Home: NextPage = () => {
-  const { session } = useContext(AuthContext);
+  const { session }: any = useContext(AuthContext);
   return (
     <div >
       <Head>

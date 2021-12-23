@@ -68,7 +68,7 @@ const CustomNavbar: FC = () => {
                             {
                                 items.map((item: Items) => {
                                     /**@param session.role from the current user session info, if it matches the nav element it will be render */
-                                    if (item.childObject && item.role.includes(session !== null ? session.role : 'any')) {
+                                    if (item.childObject && item.role.includes(session !== null ? session.user.role : 'any')) {
                                         return (
                                             <li key={item.name} className="nav-item dropdown">
                                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -91,7 +91,7 @@ const CustomNavbar: FC = () => {
                                             </li>
                                         )
                                     } else {
-                                        if (item.role.includes(session !== null ? session.role : 'any')) {
+                                        if (item.role.includes(session !== null ? session.user.role : 'any')) {
                                             return (
                                                 <li key={item.name} className="nav-item">
                                                     <Link href={item.value} passHref>
@@ -106,11 +106,18 @@ const CustomNavbar: FC = () => {
                         </ul>
                     </div>
                     <ul className="navbar-nav">
-                        <li>
-                            <Link href={'/auth/signup'} passHref>
-                                <a className="nav-link active end-100" aria-current="page">Registrarse</a>
-                            </Link>
-                        </li>
+                        {
+                            session
+                                ?
+                                null
+                                :
+                                <li>
+                                    <Link href={'/auth/signup'} passHref>
+                                        <a className="nav-link active end-100" aria-current="page">Registrarse</a>
+                                    </Link>
+                                </li>
+                        }
+
                         {/** Login/Logout link 
                             * @session is the current user session info from the AuthContext provider, if it is null it will render the login link, if it is not null it will render the logout link
                         */}

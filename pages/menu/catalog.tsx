@@ -1,200 +1,152 @@
 import type { NextPage } from 'next';
+import dynamic from 'next/dynamic'
 import Image from 'next/image';
 import Head from 'next/head';
-import { useForm } from 'react-hook-form';
 const classes = require('./../../styles/catalog.module.css');
-import ImageFile from './../../components/previewUpload';
-import { useState, useContext, useEffect, useRef } from 'react';
-import AuthContext from './../../contexts/authContext';
-import Spinner from './../../components/Spinner';
+import { useState, useContext, useEffect, useRef, Suspense } from 'react';
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+import AuthContext from '../../contexts/authContext';
+import Spinner from '../../components/Spinner';
+import { Dish } from '../../interfaces/DishInterface';
+import { imageHandler } from '../../controllers/imgController';
+import { setAsFavorite, removeFavorite, getFavorites } from '../../controllers/menuController';
+import { FaAngleUp, FaTrash, FaCog, FaRegFolderOpen, FaStar } from "react-icons/fa";
 
-type Dish = {
-    name: string;
-    description: string;
-    price: number;
-    image: string;
-}
+//*TODO move the controller module to a dynamic import form so only when the user is admin it loads
+import { getItems, addNewItem, deleteItem, changeStateOfItem, updateItem, modifyItem } from '../../controllers/menuController';
+
+
+const CatalogModal = dynamic(() => import('../../components/modals/catalogModal'))
 
 const catalog: NextPage = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const [image, setImage] = useState('');
+    const router = useRouter();
+    const [image, setImage] = useState<any>('');
     const { session }: any = useContext(AuthContext);
     const [items, setItems] = useState<Dish[]>();
-    const [isLoaded, setIsLoaded] = useState<boolean>(false)
-    const closeBtnRef = useRef(null);
+    const [item, setItem] = useState<Dish>(); // Used to modify/update existing item
+    const [favs, setFavs]: any = useState([]);
+    const [isMounted, setIsMounted] = useState<Boolean>(true)
+    const closeBtnRef = useRef<any>(undefined);
+    const modalBtnRef = useRef<any>(undefined);
 
     useEffect(() => {
-        getItems();
+        if (!session) {
+            router.replace('/')
+        } else {
+            if (isMounted) {
+                getItems(session.token, setItems);
+                getFavorites(session.user._id, session.token, setFavs)
+            }
+            setIsMounted(false)
+        }
     }, [])
 
-    // Takes a data URI and returns the Data URI corresponding to the resized image at the wanted size.
-    function resizedataURL(datas: string, wantedWidth: number, wantedHeight: number) {
-        return new Promise(async function (resolve, reject) {
-
-            // We create an image to receive the Data URI
-            var img = document.createElement('img');
-
-            // When the event "onload" is triggered we can resize the image.
-            img.onload = function () {
-                // We create a canvas and get its context.
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-
-                // We set the dimensions at the wanted size.
-                canvas.width = wantedWidth;
-                canvas.height = wantedHeight;
-
-                // We resize the image with the canvas method drawImage();
-                ctx?.drawImage(this, 0, 0, wantedWidth, wantedHeight);
-
-                var dataURI = canvas.toDataURL();
-
-                // This is the return of the Promise
-                resolve(dataURI);
-            };
-
-            // We put the Data URI in the image's src attribute
-            img.src = datas;
-
-        })
+    const addNewItemHandler = (data: Dish) => {
+        addNewItem(data, image, session.token, closeBtnRef)
     }
 
-    const addNewItem = async (data: Dish) => {
-        const optimizedImage = await resizedataURL(image, 100, 100)
-        fetch('/api/dish', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${session.token}`
-            },
-            body: JSON.stringify({
-                name: data.name,
-                description: data.description,
-                price: data.price,
-                image: optimizedImage
-            })
-        }).then(res => res.json()).then(res => console.log(res)).then(() => closeBtnRef.current.click())
+    const modifyItemHandler = (data: Dish) => {
+        modifyItem(data, item, image, session.token, closeBtnRef)
     }
 
-    const getItems = async () => {
-        fetch('/api/dish', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${session.token}`
-            }
-        })
-            .then(res => res.json())
-            .then(res => handleResponse(res))
+    const toggleCard = (id: string) => {
+        document.getElementById(`itemBody_${id}`)?.classList.toggle(`${classes.itemIsForToday}`)
+        document.getElementById(`activate_${id}`)?.classList.toggle(`${classes.isActive}`)
     }
 
-    const handleResponse = (response: Dish) => {
-        // const optimizedImage = await resizedataURL(response.records.image, 500, 500)
-        // response.records.image = optimizedImage
-        setItems(response.records);
-        setIsLoaded(true);
+    const toggleStar = (id: string) => {
+        document.getElementById(`star_${id}`)?.classList.toggle(`${classes.isFavorite}`)
     }
 
-    const imageHandler = (e: any) => {
-        let reader = new FileReader();
-        reader.onload = function (ev: any) {
-            setImage(ev.target.result);
-        }.bind(this);
-        reader.readAsDataURL(e.target.files[0])
-    }
-
-    if (!isLoaded) {
-        return <Spinner />
-    }
-    else {
+    if (!isMounted) {
         return (
-            <div>
+            <Suspense fallback={<Spinner />}>
                 <Head>
                     <title>Catalogo</title>
                     <meta name="Catalogo" content="Catalogo de platillos" />
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
                 <h1>Catalogo</h1>
-                {/* Add new Item section */}
-                <section>
-                    <span data-bs-toggle="modal" data-bs-target="#add" data-mdb-ripple-color="light" style={{ cursor: " pointer" }}>
-                        <div className="card" style={{ width: "10vw" }}>
-                            <Image className={`card-img-top ${classes.addButton}`} src="/assets/cards/plus.png" alt="Card image cap" width={150} height={200} />
-                            <div className="card-body">
-                                <h5 className="card-title">Agregar Nuevo</h5>
-                                <p className="card-text">Añadir nuevo platillo al catalogo</p>
-                            </div>
-                        </div>
-                    </span>
-                </section>
+                <button type="button" className={`btn btn-primary ${classes.addButton}`} data-bs-toggle="modal" data-bs-target="#add" data-mdb-ripple-color="light" ref={modalBtnRef}>+</button>
                 {/* Display items section */}
                 <section>
+
                     {items?.map((item: any) => {
-                        // console.log(item.image)
                         return (
-                            <div key={item._id} className="card d-inline-block mx-2" style={{ width: "10vw" }}>
-                                <img className={`card-img-top`} src={`${item.image}`} alt="Card image cap" />
-                                <div className="card-body">
-                                    <h5 className="card-title">{item.name}</h5>
-                                    <p className="card-text">{item.description}</p>
-                                    <p className="card-text">${item.price}</p>
+                            <div key={item._id} id={`itemBody_${item._id}`} className={item.forToday ? `card d-inline-block mx-2 ${classes.itemIsForToday}` : `card d-inline-block mx-2`} >
+                                {
+                                    session?.user?.role === 'admin'
+                                        ?
+                                        <div>
+                                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" className={`d-inline-block  ${classes.controlButtons}`} onClick={() => deleteItem(item._id, session.token)}><FaTrash /></span>
+                                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Modificar" className={`d-inline-block  ${classes.controlButtons}`} onClick={() => updateItem(item, modalBtnRef, setItem)}><FaCog /></span>
+                                            <span
+                                                id={`activate_${item._id}`}
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                title={item.forToday ? "Desactivar" : "Activar"}
+                                                className={item.forToday ? `d-inline-block  ${classes.controlButtons} ${classes.isActive}` : `d-inline-block  ${classes.controlButtons}`}
+                                                onClick={() => changeStateOfItem(item._id, !item.forToday, session.token, toggleCard(item._id))}>
+                                                <FaAngleUp />
+                                            </span>
+                                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Review" className={`d-inline-block  ${classes.controlButtons}`}>
+                                                <Link href={`/menu/review/${item.id}`}>
+                                                    <FaRegFolderOpen />
+                                                </Link>
+                                            </span>
+                                            <span
+                                                id={`star_${item._id}`}
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                title="Marcar como favorito"
+                                                className={favs.includes(item._id) ? `d-inline-block  ${classes.controlButtons} ${classes.isFavorite}` : `d-inline-block  ${classes.controlButtons}`}
+                                                onClick={() => {
+                                                    favs.includes(item._id)
+                                                        ?
+                                                        removeFavorite(item._id, session.user._id, session.token, toggleStar(item._id))
+                                                        :
+                                                        setAsFavorite(item._id, session.user._id, session.token, toggleStar(item._id))
+                                                }}>
+                                                <FaStar />
+                                            </span>
+                                        </div>
+                                        :
+                                        <div>
+                                            <span className={`d-inline-block  ${classes.controlButtons}`} onClick={() => deleteItem(item._id, session.token)}><Image src='/assets/icons/chat.png' width={20} height={20} /></span>
+                                            <span className={`d-inline-block  ${classes.controlButtons}`} onClick={() => deleteItem(item._id, session.token)}><Image src='/assets/icons/star.png' width={20} height={20} /></span>
+                                        </div>
+                                }
+
+                                <div style={{ width: "15vw" }} id={`cardBody_${item._id}`}>
+                                    <img className={`card-img-top`} id={`img_${item._id}`} src={`${item.image}`} alt="Card image cap" />
+                                    <div className="card-body">
+                                        <h5 className="card-title" id={`title_${item._id}`}>{item.name}</h5>
+                                        <p className="card-text" id={`description_${item._id}`}>{item.description}</p>
+                                        <p className="card-text" id={`price_${item._id}`}>${item.price}</p>
+                                    </div>
                                 </div>
                             </div>
                         )
                     })}
                 </section>
                 {/* Modal box */}
-                <div className="modal fade" id="add" tabIndex={-1} aria-labelledby="add" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Añadir platillo</h5>
-                                <button ref={closeBtnRef} type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                <form onSubmit={handleSubmit(addNewItem)}>
-                                    {/**@Name input */}
-                                    <div className="form mb3">
-                                        <label className="form-lable" htmlFor="name">Nombre del platillo:</label>
-                                        <input {...register("name", { required: true, maxLength: 50, pattern: /^[a-zA-Z ]+$/ })} type="text" name="name" className="form-control form-control-sm" />
-                                    </div>
-                                    {errors.name && <p className="text-danger">No ingresar numeros</p>}
-                                    <br />
-                                    {/**@Description input */}
-                                    <div className="form mb3">
-                                        <label className="form-lable" htmlFor="description">Descripcion del platillo:</label>
-                                        <textarea {...register("description", { required: true, maxLength: 150 })} name="description" className="form-control form-control-sm" style={{ height: "15vh" }}></textarea>
-                                    </div>
-                                    {errors.description && <p className="text-danger">No ingresar caracteres especiales</p>}
-                                    <br />
-                                    {/**@Price input */}
-                                    <div className="form mb3">
-                                        <label className="form-lable" htmlFor="price">Precio del platillo:</label>
-                                        <input {...register("price")} type="number" name="price" step="0.01" className="form-control form-control-sm" />
-                                    </div>
-                                    {errors.price && <p className="text-danger">Error</p>}
-                                    <br />
-                                    {/**@Img input */}
-                                    <div className="mb3">
-                                        <label className="form-lable" htmlFor="img">Foto del platillo:</label>
-                                        <input {...register("img")} type="file" name="img" className="form-control form-control-sm" onChange={imageHandler} />
-                                    </div>
-                                    <div className={``}>
-                                        <ImageFile imageURI={image} />
-                                    </div>
-                                    <br />
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                        <button type="submit" className="btn btn-primary">Agregar</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div >
+                {session?.user?.role === 'admin' ?? 'helper'
+                    ?
+                    <CatalogModal
+                        items={items}
+                        item={item}
+                        modifyItemHandler={modifyItemHandler}
+                        addNewItemHandler={addNewItemHandler}
+                        image={image}
+                        imageHandler={imageHandler}
+                        setImage={setImage}
+                        closeBtnRef={closeBtnRef}
+                    />
+                    : undefined}
+            </Suspense>
         );
-    }
+    } else return <></>
 }
 
 export default catalog;

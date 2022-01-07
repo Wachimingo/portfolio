@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import EmailProvider from 'next-auth/providers/email';
 import FacebookProvider from "next-auth/providers/facebook";
-const mongoose = require('mongoose')
+import '../../../utils/dbConnection';
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
 import clientPromise from "./../../../lib/mongodb"
 const jwt = require('jsonwebtoken');
@@ -12,13 +12,12 @@ const User = require('./../../../models/userModel');
 const handleCallback = (user, profile, token, type) => {
     switch (type) {
         case 'facebook':
-            return `/auth/success?id=${user._id}&externalId=${profile.id}&name=${profile.name}&email=${profile.email}&picture=${profile.picture.data.url}&role=user&token=${token}`;
+            return `/auth/success?id=${user._id}&externalId=${profile.id}&name=${profile.name}&email=${profile.email}&picture=${profile.picture.data.url}&role=user&token=${token}&balance=${user.balance}`;
             break;
         case 'email':
-            return `/auth/success?id=${user._id}&name=${user.name}&email=${user.email}&role=${user.role}&token=${token}`;
+            return `/auth/success?id=${user._id}&name=${user.name}&email=${user.email}&role=${user.role}&token=${token}&balance=${user.balance}`;
             break;
     }
-
 }
 
 export default NextAuth({
@@ -40,13 +39,6 @@ export default NextAuth({
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
             if (profile) {
-
-                //Connection to MongoDB
-                const dev_db_url = 'mongodb://localhost:27017/portfolio'
-                // mongoose.connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true }):
-                mongoose.connect(dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true });
-                mongoose.Promise = global.Promise
-                const db = mongoose.connection;
                 //Check if user exists
                 const userExists = await User.findOne({ externalId: profile.id, email: profile.email });
                 if (!userExists) {
@@ -56,7 +48,8 @@ export default NextAuth({
                         externalId: profile.id,
                         email: profile.email,
                         role: 'user',
-                        photo: profile.picture.data.url
+                        photo: profile.picture.data.url,
+                        balance: 0
                     })
                     const id = newUser._id;
                     const token = jwt.sign({ id }, process.env.SECRET, {
@@ -71,7 +64,6 @@ export default NextAuth({
                     return handleCallback(userExists, profile, token, 'facebook');
                 }
             } else if (email) {
-                // *TODO: Check if email has already been used
                 if (email.email !== undefined) {
                     const userExists = await User.findOne({ email: email.email });
                     const id = userExists._id
@@ -79,7 +71,7 @@ export default NextAuth({
                         expiresIn: process.env.JWT_EXPIRES_IN,
                     });
                     const updatedUser = await User.findOneAndUpdate({ email: email.email }, { isValidated: true });
-                    console.log(updatedUser)
+                    // console.log(updatedUser)
                     return handleCallback(updatedUser, null, token, 'email');
                 }
                 //The first call back it does only returns an object to confirm the email requests = true

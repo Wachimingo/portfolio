@@ -22,25 +22,28 @@ type Brand = {
 }
 
 const CustomNavbar: FC = () => {
-    const { session } = useContext(AuthContext);
+    const { session }: any = useContext(AuthContext);
     const [isItemsLoaded, setIsItemsLoaded] = useState<Boolean>(false);
     const [isBrandLoaded, setIsBrandLoaded] = useState<Boolean>(false);
     const [items, setItems] = useState<Items[]>([]);
     const [brand, setBrand] = useState<Brand>({ name: 'Brand', bussinessType: '', location: {}, description: '', email: '' });
-    // const session2 = { role: 'any' };
+    const [isMounted, setIsMounted] = useState<Boolean>(true);
     useEffect(() => {
-        fetch('/api/navbar', {
-            method: 'GET',
-        })
-            .then(res => res.json())
-            .then(res => setItems(res))
-            .then(() => setIsItemsLoaded(true));
-        fetch('/api/brand', {
-            method: 'GET',
-        })
-            .then(res => res.json())
-            .then(res => setBrand(res[0]))
-            .then(() => setIsBrandLoaded(true));
+        if (isMounted) {
+            fetch('/api/navbar', {
+                method: 'GET',
+            })
+                .then(res => res.json())
+                .then(res => setItems(res))
+                .then(() => setIsItemsLoaded(true));
+            fetch('/api/brand', {
+                method: 'GET',
+            })
+                .then(res => res.json())
+                .then(res => setBrand(res[0]))
+                .then(() => setIsBrandLoaded(true));
+        }
+        setIsMounted(false)
     }, [items])
 
     if (!isItemsLoaded || !isBrandLoaded) {
@@ -68,7 +71,7 @@ const CustomNavbar: FC = () => {
                             {
                                 items.map((item: Items) => {
                                     /**@param session.role from the current user session info, if it matches the nav element it will be render */
-                                    if (item.childObject && item.role.includes(session !== null ? session.user.role : 'any')) {
+                                    if (item.childObject && item.role.includes(session ? session.user.role : 'any')) {
                                         return (
                                             <li key={item.name} className="nav-item dropdown">
                                                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -91,7 +94,7 @@ const CustomNavbar: FC = () => {
                                             </li>
                                         )
                                     } else {
-                                        if (item.role.includes(session !== null ? session.user.role : 'any')) {
+                                        if (item.role.includes(session ? session.user.role : 'any')) {
                                             return (
                                                 <li key={item.name} className="nav-item">
                                                     <Link href={item.value} passHref>
@@ -99,7 +102,7 @@ const CustomNavbar: FC = () => {
                                                     </Link>
                                                 </li>
                                             )
-                                        } else return null
+                                        } else return undefined
                                     }
                                 })
                             }
@@ -109,7 +112,7 @@ const CustomNavbar: FC = () => {
                         {
                             session
                                 ?
-                                null
+                                undefined
                                 :
                                 <li>
                                     <Link href={'/auth/signup'} passHref>

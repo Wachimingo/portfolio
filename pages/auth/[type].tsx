@@ -48,6 +48,7 @@ const Auth = ({ type, providers }: AuthProps) => {
   }
 
   useEffect(() => {
+
     // type === 'signout' ? signOut() : null;
     switch (type) {
       case 'signout':
@@ -55,7 +56,18 @@ const Auth = ({ type, providers }: AuthProps) => {
         break;
       case 'success':
         // console.log(router.query)
-        setSession(router.query);
+        const newSession = {
+          status: 'success',
+          user: {
+            role: router.query.role,
+            name: router.query.name,
+            email: router.query.email,
+            picture: router.query.picture,
+          },
+          toke: router.query.token
+        }
+        setSession(newSession);
+        router.push('/');
         break;
     }
 
@@ -93,7 +105,7 @@ const Auth = ({ type, providers }: AuthProps) => {
   }
 
   const handleResponse = (response: Response) => {
-    console.log(response)
+    // console.log(response)
     if (response.user !== undefined) {
       setSession(response);
       if (router.query.page) {
@@ -131,7 +143,7 @@ const Auth = ({ type, providers }: AuthProps) => {
                       <input {...register("name", { required: true, pattern: /^[a-zA-Z ]+$/ })} type="text" id="name" className="form-control form-control-lg" />
                       <label className="form-label" htmlFor="name">Nombre</label>
                     </div>
-                    : null
+                    : undefined
                 }
 
                 {/**@Email input */}
@@ -160,7 +172,7 @@ const Auth = ({ type, providers }: AuthProps) => {
                       })} type="password" id="passwordConfirm" className="form-control form-control-lg" />
                       <label className="form-label" htmlFor="passwordConfirm">Repetir contraseña</label>
                     </div>
-                    : null
+                    : undefined
                 }
                 {errors.passwordConfirm && <p className="text-danger">Las contraseñas no coinciden</p>}
 
@@ -190,7 +202,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const type = context.query.type;
     const providers = await getProviders();
-    // console.log(providers)
+    // console.log(type)
 
     return {
       props: { type, providers },

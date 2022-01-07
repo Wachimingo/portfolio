@@ -6,15 +6,15 @@ const AuthContext = createContext({})
 
 export const AuthProvider = ({ children }) => {
     const router = useRouter()
-    const [session, setSession] = useState(() => useLocalStorage.getLocalStorage("session", null))
-    const [error, setError] = useState(null)
+    const [session, setSession] = useState(() => useLocalStorage.getLocalStorage("session", undefined))
+    const [error, setError] = useState(undefined)
 
     useEffect(() => {
         useLocalStorage.setLocalStorage("session", session);
     }, [session]);
 
     const quitSession = async () => {
-        setSession('')
+        setSession(undefined)
         router.replace('/');
     };
 

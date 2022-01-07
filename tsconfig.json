@@ -26,6 +26,7 @@
   ],
   "exclude": [
     "node_modules",
+    "./next.config.js",
     "./context/*.js",
     "./components/clientSideComponents/*.js",
     "./components/*.js",

@@ -15,3 +15,7 @@ export type Response = {
     status: string,
     totalRecords: number
 }
+
+export type Favs = {
+    id: string
+}

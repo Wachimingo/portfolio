@@ -11,9 +11,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             body: JSON.stringify(req.body)
         })
     } else if (req.method === 'GET') {
-        result = await fetch(`${process.env.managementBackend}/api/v1/menu?limit=1000`, {
-            method: 'GET',
-        })
+        if (req.query.type === 'all') {
+            result = await fetch(`${process.env.managementBackend}/api/v1/menu?limit=1000`, {
+                method: 'GET',
+            })
+        } else {
+            result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.query.id}`, {
+                method: 'GET',
+            })
+        }
     } else if (req.method === 'PATCH' && req.body.type === 'state') {
         result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.body.id}`, {
             method: 'PATCH',

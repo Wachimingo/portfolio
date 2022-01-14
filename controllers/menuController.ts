@@ -1,12 +1,12 @@
 import { Dish, Response } from '../interfaces/DishInterface'
 import { resizedataURL } from './imgController'
 
-export const getItems = (token: string, setItems: Function) => {
-    fetch('/api/dish', {
+export const getItems = (setItems: Function) => {
+    fetch('/api/dish?type=all', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            // Authorization: `Bearer ${token}`
         }
     })
         .then(res => res.json())
@@ -34,7 +34,7 @@ export const getFavorites = (userId: string, token: string, setFavorites: Functi
         .then((res) => handleResponse(res.records, setFavorites))
 }
 
-export const addNewItem = async (data: Dish, image: any, token: string, closeBtnRef: any) => {
+export const addNewItem = async (data: Dish, image: any, token: string, setShowModal: Function) => {
     const optimizedImage = await resizedataURL(image, 100, 100)
     fetch('/api/dish', {
         method: 'POST',
@@ -48,10 +48,10 @@ export const addNewItem = async (data: Dish, image: any, token: string, closeBtn
             price: data?.price,
             image: optimizedImage
         })
-    }).then(res => res.json()).then(res => console.log(res)).then(() => closeBtnRef.current?.click())
+    }).then(res => res.json()).then(res => console.log(res)).then(() => setShowModal('hidden'))
 }
 
-export const modifyItem = async (data: Dish, item: Dish, image: any, token: string, closeBtnRef: any) => {
+export const modifyItem = async (data: Dish, item: Dish, image: any, token: string, setShowModal: Function) => {
     let optimizedImage: any = item?.image
     if (image) optimizedImage = await resizedataURL(image, 100, 100)
 
@@ -72,12 +72,12 @@ export const modifyItem = async (data: Dish, item: Dish, image: any, token: stri
     })
         .then(res => res.json())
         .then(res => document.location.reload())
-        .then(() => closeBtnRef.current?.click())
+        .then(() => setShowModal('hidden'))
 }
 
-export const updateItem = (data: Dish, modalBtnRef: any, setItem: Function) => {
+export const updateItem = (data: Dish, setShowModal: Function, setItem: Function) => {
     setItem(data);
-    modalBtnRef.current.click();
+    setShowModal('')
 }
 
 export const deleteItem = (id: string, token: string) => {

@@ -1,12 +1,10 @@
 import type { FC } from 'react';
-import { useEffect, useState, useContext } from 'react';
-import AuthContext from '../../../contexts/authContext';
-import Image from 'next/image';
+import { useState, useContext, memo } from 'react';
+import AuthContext from '../contexts/authContext';
 import Link from 'next/link';
-import Spinner from '../../Spinner';
 import { FaBars } from 'react-icons/fa'
 
-const CustomNavbar: FC = () => {
+export const MainNavbar: FC = memo(() => {
     const { session }: any = useContext(AuthContext);
     const [navbarOpen, setNavbarOpen] = useState(false);
     return (
@@ -92,6 +90,4 @@ const CustomNavbar: FC = () => {
             </nav>
         </>
     );
-}
-
-export default CustomNavbar;
+});

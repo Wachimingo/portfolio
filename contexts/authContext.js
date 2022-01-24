@@ -1,16 +1,25 @@
 import { createContext, useState, useEffect } from "react";
-import useLocalStorage from './../hooks/useLocalStorage'
+import { getLocalStorage, setLocalStorage } from './../hooks/useLocalStorage'
 import { useRouter } from 'next/router'
 
 const AuthContext = createContext({})
 
 export const AuthProvider = ({ children }) => {
     const router = useRouter()
-    const [session, setSession] = useState(() => useLocalStorage.getLocalStorage("session", undefined))
+    const [session, setSession] = useState(() => getLocalStorage("session", undefined))
     const [error, setError] = useState(undefined)
 
     useEffect(() => {
-        useLocalStorage.setLocalStorage("session", session);
+        setLocalStorage("session", session);
+        // console.log(session)
+        if (session) {
+            if (Object.keys(session).length > 0) {
+                document.cookie = `userName=${session.user.name}`
+                document.cookie = `userId=${session.user._id}`
+                document.cookie = `token=${session.token}`
+                document.cookie = `role=${session.user.role}`
+            }
+        }
     }, [session]);
 
     const quitSession = async () => {

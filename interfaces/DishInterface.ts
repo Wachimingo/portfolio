@@ -8,6 +8,7 @@ export type Dish = {
     name: string;
     description: string;
     price: number;
+    category: string;
 } | undefined
 
 export type Response = {
@@ -18,4 +19,9 @@ export type Response = {
 
 export type Favs = {
     id: string
+}
+
+export type Categories = {
+    _id: string,
+    name: string
 }

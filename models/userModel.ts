@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const userSchema = new mongoose.Schema({
+
+const userSchema: any = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Por favor ingrese un nombre de usuario'],
@@ -53,9 +54,9 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-userSchema.pre(/^'find'/, function (next) {
-    this.find({ active: { $ne: false } });
+userSchema.pre(/^'find'/, function (next: any) {
+    userSchema.find({ active: { $ne: false } });
     next();
 });
 
-module.exports = mongoose.models.User || mongoose.model('User', userSchema);
+export default mongoose.models.User || mongoose.model('User', userSchema);

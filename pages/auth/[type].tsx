@@ -1,42 +1,12 @@
 import type { GetServerSideProps } from 'next';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import Head from 'next/head';
 import AuthContext from './../../contexts/authContext';
 import { getProviders, signIn } from "next-auth/react"
 import { FaFacebook } from 'react-icons/fa'
-
-interface AuthProps {
-  type: string,
-  providers: any,
-}
-
-type Response = {
-  status: string,
-  token: string,
-  user: {
-    balance: number,
-    canBorrow: boolean,
-    email: string,
-    name: string,
-    role: string,
-    tn: string,
-    _id: string
-  }
-}
-
-type Login = {
-  email: string,
-  password: string
-}
-
-type Register = {
-  name: string,
-  email: string,
-  password: string,
-  passwordConfirm: string
-}
+import { AuthProps, Login, Register } from '../../interfaces/AuthInterface';
 
 const Auth = ({ type, providers }: AuthProps) => {
   const router = useRouter();
@@ -49,7 +19,6 @@ const Auth = ({ type, providers }: AuthProps) => {
   }
 
   useEffect(() => {
-
     // type === 'signout' ? signOut() : null;
     switch (type) {
       case 'signout':
@@ -67,7 +36,6 @@ const Auth = ({ type, providers }: AuthProps) => {
           },
           token: router.query.token
         }
-        document.cookie = `userId=${router.query?.userId ?? ''}/token=${router.query?.token}`
         setSession(newSession);
         router.push('/');
         break;
@@ -75,59 +43,56 @@ const Auth = ({ type, providers }: AuthProps) => {
 
   }, [type])
 
-  const signin = (data: Login) => {
-    fetch('/api/auth', {
+  const signin = async (credentials: Login) => {
+    const response = await fetch('/api/auth', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        email: data.email,
-        password: data.password,
+        email: credentials.email,
+        password: credentials.password,
         type: 'signin'
       })
-    }).then(res => res.json()).then(res => handleResponse(res))
-  }
-
-  const signup = (data: Register) => {
-    fetch('/api/auth', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: data.name.trim(),
-        email: data.email,
-        password: data.password,
-        passwordConfirm: data.passwordConfirm,
-        type: 'signup'
-      })
     })
-    signIn("email", { email: data.email })
-  }
+    // .then(res => res.json()).then(res => handleResponse(res))
+    const data = await response.json();
 
-  const handleResponse = (response: Response) => {
-    // console.log(response)
-    if (response.user !== undefined) {
-      document.cookie = `userId=${response.user?._id}`
-      document.cookie = `token=${response?.token}`
-      setSession(response);
+    if (response.ok) {
+      setSession(data);
       if (router.query.page) {
         router.push(`${router.query.page}`);
       } else {
         router.push('/');
       }
     } else {
-      // toast.error(response.message);
-      console.log(response);
+      console.log(data.message);
     }
+  }
+
+  const signup = async (input: Register) => {
+    const response = await fetch('/api/auth', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: input.name.trim(),
+        email: input.email,
+        password: input.password,
+        passwordConfirm: input.passwordConfirm,
+        type: 'signup'
+      })
+    })
+    const data = await response.json();
+    signIn("email", { email: input.email });
   }
 
   return (
     <>
       <Head>
         <title>{type}</title>
-        <meta name="Auth" content="Signin or Signup" />
+        <meta name="Auth" content={`${type}`} />
       </Head>
       <h1 className="xl:ml-m2vw">{type}</h1>
       <section className="">

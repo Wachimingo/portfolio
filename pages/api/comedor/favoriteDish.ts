@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-    // console.log(req.body)
     let result: any = undefined;
     if (req.method === 'POST') {
         result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.body.dishId}/fav`, {
@@ -41,10 +40,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const data = await result?.json();
     // console.log(data)
     if (result?.ok) {
-        res.status(200).json(data)
+        if (data.msg) {
+            res.status(400).json({
+                record: null,
+                records: null
+            })
+        } else {
+            res.status(200).json(data)
+        }
     } else {
-        res.status(data.error.statusCode).json({
-            message: data.message
+        // console.log(data)
+        res.status(400).json({
+            message: data.error.message,
+            record: null,
+            records: null,
         });
     }
 }

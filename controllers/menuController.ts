@@ -1,61 +1,87 @@
 import { Dish, Response } from '../interfaces/DishInterface'
 import { resizedataURL } from './imgController'
 
-export const getItems = (token: string, setItems: Function) => {
-    fetch('/api/dish', {
+export const getItems = async (setItems: Function) => {
+    const response = await fetch('/api/comedor/dish?type=all', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            // Authorization: `Bearer ${token}`
         }
     })
-        .then(res => res.json())
-        .then(res => handleResponse(res, setItems))
-}
 
-const handleResponse = (response: Response, stateFunction: Function) => {
-    // console.log(response.records === undefined)
-    if (response.records === undefined) {
-        stateFunction(response);
+    const data = await response.json();
+    if (response.ok) {
+        setItems(data.records)
     } else {
-        stateFunction(response.records);
+        console.log(data.error.message)
     }
-
 }
 
-export const getFavorites = (userId: string, token: string, setFavorites: Function) => {
-    fetch(`/api/favoriteDish?userId=${userId}`, {
+// const handleResponse = (response: Response, stateFunction: Function) => {
+//     if (response.records === undefined) {
+//         stateFunction(response);
+//     } else {
+//         stateFunction(response.records);
+//     }
+
+// }
+
+export const getFavorites = async (userId: string, token: string, setFavorites: Function) => {
+    const response = await fetch(`/api/comedor/favoriteDish?userId=${userId}`, {
         method: 'GET',
         headers: {
             Authorization: `Bearer ${token}`
         }
     })
-        .then(res => res.json())
-        .then((res) => handleResponse(res.records, setFavorites))
+    // .then(res => res.json())
+    // .then((res) => handleResponse(res.records, setFavorites))
+    const data = await response.json();
+    if (response.ok) {
+        setFavorites(data)
+    } else {
+        console.log(data.error.message)
+    }
 }
 
-export const addNewItem = async (data: Dish, image: any, token: string, closeBtnRef: any) => {
+export const addNewItem = async (dish: any, image: any, token: string, setShowModal: Function, setItem: Function) => {
+    // console.table(data)
     const optimizedImage = await resizedataURL(image, 100, 100)
-    fetch('/api/dish', {
+    const response = await fetch('/api/comedor/dish', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-            name: data?.name,
-            description: data?.description,
-            price: data?.price,
+            name: dish?.name,
+            description: dish?.description,
+            price: dish?.price,
+            category: dish?.category,
             image: optimizedImage
         })
-    }).then(res => res.json()).then(res => console.log(res)).then(() => closeBtnRef.current?.click())
+    })
+    // .then(res => res.json())
+    // .then(res => console.log(res))
+    // .then(() => {
+    //     setShowModal('hidden')
+    //     setItem(undefined)
+    // })
+    const data = await response.json()
+    if (response.ok) {
+        console.log(data);
+        setShowModal('hidden');
+        setItem(undefined)
+    } else {
+        console.log(data.error.message)
+    }
 }
 
-export const modifyItem = async (data: Dish, item: Dish, image: any, token: string, closeBtnRef: any) => {
+export const modifyItem = async (data: any, item: Dish, image: any, token: string, setShowModal: Function, setItem: Function) => {
     let optimizedImage: any = item?.image
     if (image) optimizedImage = await resizedataURL(image, 100, 100)
 
-    fetch('/api/dish', {
+    fetch('/api/comedor/dish', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -72,28 +98,37 @@ export const modifyItem = async (data: Dish, item: Dish, image: any, token: stri
     })
         .then(res => res.json())
         .then(res => document.location.reload())
-        .then(() => closeBtnRef.current?.click())
+        .then(() => {
+            setShowModal('hidden')
+            setItem(undefined)
+        })
 }
 
-export const updateItem = (data: Dish, modalBtnRef: any, setItem: Function) => {
+export const updateItem = (data: Dish, setShowModal: Function, setItem: Function) => {
     setItem(data);
-    modalBtnRef.current.click();
+    setShowModal('')
 }
 
-export const deleteItem = (id: string, token: string) => {
-    fetch('/api/dish', {
+export const deleteItem = async (id: string, token: string) => {
+    const response = await fetch('/api/comedor/dish', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ id })
-    })
+    });
+    const data = await response.json();
+    if (response.ok) {
+        console.log(data)
+    } else {
+        console.log(data.error.message)
+    }
 }
 
 // This function sets the item to either show it is in sale for the current day or not, if it is going to be sell in the current day and active border will be added to the div
-export const changeStateOfItem = (id: string, state: boolean, token: string, toggleCard: void) => {
-    fetch('/api/dish', {
+export const changeStateOfItem = async (id: string, state: boolean, token: string, toggleCard: void) => {
+    const response = await fetch('/api/comedor/dish', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -104,11 +139,14 @@ export const changeStateOfItem = (id: string, state: boolean, token: string, tog
             state,
             type: 'state'
         })
-    })
+    });
+
+    const data = await response.json();
+    if (!response.ok) console.log(data.error.message);
 }
 
-export const setAsFavorite = (dishId: string, userId: string, token: string, toggleStar: void) => {
-    fetch('/api/favoriteDish', {
+export const setAsFavorite = async (dishId: string, userId: string, token: string, toggleStar: void) => {
+    const response = await fetch('/api/comedor/favoriteDish', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -118,11 +156,14 @@ export const setAsFavorite = (dishId: string, userId: string, token: string, tog
             dishId,
             userId,
         })
-    })
+    });
+
+    const data = await response.json();
+    if (!response.ok) console.log(data.error.message);
 }
 
-export const removeFavorite = (dishId: string, userId: string, token: string, toggleStar: void) => {
-    fetch('/api/favoriteDish', {
+export const removeFavorite = async (dishId: string, userId: string, token: string, toggleStar: void) => {
+    const response = await fetch('/api/comedor/favoriteDish', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -132,11 +173,13 @@ export const removeFavorite = (dishId: string, userId: string, token: string, to
             dishId,
             userId,
         })
-    })
+    });
+    const data = await response.json();
+    if (!response.ok) console.log(data.error.message)
 }
 
-export const reviewItem = (dishId: string, userId: string, token: string) => {
-    fetch('/api/review', {
+export const reviewItem = async (dishId: string, userId: string, token: string) => {
+    const response = await fetch('/api/comedor/review', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -146,5 +189,7 @@ export const reviewItem = (dishId: string, userId: string, token: string) => {
             dishId,
             userId,
         })
-    })
+    });
+    const data = await response.json();
+    if (!response.ok) console.log(data.error.message)
 }

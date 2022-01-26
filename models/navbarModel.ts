@@ -23,4 +23,4 @@ const navBarSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.models.NavBar || mongoose.model('NavBar', navBarSchema);
+export default mongoose.models.NavBar || mongoose.model('NavBar', navBarSchema);

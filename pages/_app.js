@@ -1,22 +1,14 @@
 import { AuthProvider } from './../contexts/authContext';
-import { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
-import CustomNavbar from '../components/navigation/CustomNavbar';
+import 'tailwindcss/tailwind.css';
+import dynamic from 'next/dynamic';
+const MainNavbar = dynamic(() => import('../components/NavBars').then((mod) => mod.MainNavbar), { ssr: false })
 import './../styles/globals.css'
 
 function MyApp({ Component, pageProps }) {
-  const [isMounted, setIsMounted] = useState(true)
-  useEffect(() => {
-    if (isMounted) {
-      import("bootstrap/dist/js/bootstrap");
-    }
-    setIsMounted(false)
-  }, []);
-
   return (
     <>
       <AuthProvider>
-        <CustomNavbar />
+        <MainNavbar />
         <Component {...pageProps} />
       </AuthProvider>
     </>

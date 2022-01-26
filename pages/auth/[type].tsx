@@ -1,41 +1,12 @@
 import type { GetServerSideProps } from 'next';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import Head from 'next/head';
 import AuthContext from './../../contexts/authContext';
 import { getProviders, signIn } from "next-auth/react"
-
-interface AuthProps {
-  type: string,
-  providers: any,
-}
-
-type Response = {
-  status: string,
-  token: string,
-  user: {
-    balance: number,
-    canBorrow: boolean,
-    email: string,
-    name: string,
-    role: string,
-    tn: string,
-    _id: string
-  }
-}
-
-type Login = {
-  email: string,
-  password: string
-}
-
-type Register = {
-  name: string,
-  email: string,
-  password: string,
-  passwordConfirm: string
-}
+import { FaFacebook } from 'react-icons/fa'
+import { AuthProps, Login, Register } from '../../interfaces/AuthInterface';
 
 const Auth = ({ type, providers }: AuthProps) => {
   const router = useRouter();
@@ -48,7 +19,6 @@ const Auth = ({ type, providers }: AuthProps) => {
   }
 
   useEffect(() => {
-
     // type === 'signout' ? signOut() : null;
     switch (type) {
       case 'signout':
@@ -64,7 +34,7 @@ const Auth = ({ type, providers }: AuthProps) => {
             email: router.query.email,
             picture: router.query.picture,
           },
-          toke: router.query.token
+          token: router.query.token
         }
         setSession(newSession);
         router.push('/');
@@ -73,123 +43,112 @@ const Auth = ({ type, providers }: AuthProps) => {
 
   }, [type])
 
-  const signin = (data: Login) => {
-    fetch('/api/auth', {
+  const signin = async (credentials: Login) => {
+    const response = await fetch('/api/auth', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        email: data.email,
-        password: data.password,
+        email: credentials.email,
+        password: credentials.password,
         type: 'signin'
       })
-    }).then(res => res.json()).then(res => handleResponse(res))
-  }
-
-  const signup = (data: Register) => {
-    fetch('/api/auth', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: data.name.trim(),
-        email: data.email,
-        password: data.password,
-        passwordConfirm: data.passwordConfirm,
-        type: 'signup'
-      })
     })
-    signIn("email", { email: data.email })
-  }
+    // .then(res => res.json()).then(res => handleResponse(res))
+    const data = await response.json();
 
-  const handleResponse = (response: Response) => {
-    // console.log(response)
-    if (response.user !== undefined) {
-      setSession(response);
+    if (response.ok) {
+      setSession(data);
       if (router.query.page) {
         router.push(`${router.query.page}`);
       } else {
         router.push('/');
       }
     } else {
-      // toast.error(response.message);
-      console.log(response);
+      console.log(data.message);
     }
+  }
+
+  const signup = async (input: Register) => {
+    const response = await fetch('/api/auth', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: input.name.trim(),
+        email: input.email,
+        password: input.password,
+        passwordConfirm: input.passwordConfirm,
+        type: 'signup'
+      })
+    })
+    const data = await response.json();
+    signIn("email", { email: input.email });
   }
 
   return (
     <>
       <Head>
         <title>{type}</title>
-        <meta name="Auth" content="Signin or Signup" />
+        <meta name="Auth" content={`${type}`} />
       </Head>
-      <h1 className="display-6">{type}</h1>
-      <section className="vh-25 mt-5">
-        <div className="container py-5 h-100">
-          <div className="row d-flex align-items-center justify-content-center h-100">
-            <div className="col-md-8 col-lg-7 col-xl-6">
-              <img src="https://mdbootstrap.com/img/Photos/new-templates/bootstrap-login-form/draw2.svg" className="img-fluid" alt="Phone image" />
-            </div>
-            <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-              {/* Start of login form */}
-              <form onSubmit={type === 'signin' ? handleSubmit(signin) : handleSubmit(signup)}>
+      <h1 className="xl:ml-m2vw">{type}</h1>
+      <section className="">
+        <div className='xl:w-3/6 xl:ml-96 sm:ml-1'>
+          <form className='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800' onSubmit={type === 'signin' ? handleSubmit(signin) : handleSubmit(signup)}>
 
-                {/**@name is only render when the auth type is signup, and it is only use to validate that password is correct*/}
-                {
-                  type === 'signup' ?
-                    <div className="form-floating mb-3">
-                      <input {...register("name", { required: true, pattern: /^[a-zA-Z ]+$/ })} type="text" id="name" className="form-control form-control-lg" />
-                      <label className="form-label" htmlFor="name">Nombre</label>
-                    </div>
-                    : undefined
-                }
-
-                {/**@Email input */}
-                <div className="form-floating mb-3">
-                  <input {...register("email", { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })} type="email" id="username" className="form-control form-control-lg" />
-                  <label className="form-label" htmlFor="username">Correo electronico</label>
+            {/**@name is only render when the auth type is signup, and it is only use to validate that password is correct*/}
+            {
+              type === 'signup' ?
+                <div className="mb-4">
+                  <input {...register("name", { required: true, pattern: /^[a-zA-Z ]+$/ })} type="text" id="name" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
+                  <label className="block text-white text-sm font-bold mb-2" htmlFor="name">Nombre</label>
                 </div>
-                {errors.email && <p className="text-danger">El correo electronico es requerido</p>}
+                : undefined
+            }
 
-                {/**@Password input */}
-
-                <div className="form-floating mb-3">
-                  <input {...register("password", { required: true })} type="password" id="password" className="form-control form-control-lg" />
-                  <label className="form-label" htmlFor="password">Contraseña</label>
-                </div>
-                {errors.password && <p className="text-danger">La contraseña es requerida</p>}
-
-                {/**@PasswordConfirm is only render when the auth type is signup, and it is only use to validate that password is correct*/}
-                {
-                  type === 'signup' ?
-                    <div className="form-floating mb-3">
-                      <input {...register("passwordConfirm", {
-                        required: true, validate: {
-                          matchPassword: () => watch("password") === watch("passwordConfirm")
-                        }
-                      })} type="password" id="passwordConfirm" className="form-control form-control-lg" />
-                      <label className="form-label" htmlFor="passwordConfirm">Repetir contraseña</label>
-                    </div>
-                    : undefined
-                }
-                {errors.passwordConfirm && <p className="text-danger">Las contraseñas no coinciden</p>}
-
-                {/**@Submit button */}
-                <button type="submit" className="btn btn-primary btn-lg btn-block">{type === 'signin' ? 'Ingresar' : 'Registrarse'}</button>
-              </form>
+            {/**@Email input */}
+            <div className="mb-4">
+              <input {...register("email", { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })} type="email" id="username" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
+              <label className="block text-white text-sm font-bold mb-2" htmlFor="username">Correo electronico</label>
             </div>
-          </div>
+            {errors.email && <p className="block text-red-500 text-sm font-bold mb-2">El correo electronico es requerido</p>}
+
+            {/**@Password input */}
+
+            <div className="mb-4">
+              <input {...register("password", { required: true })} type="password" id="password" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
+              <label className="block text-white text-sm font-bold mb-2" htmlFor="password">Contraseña</label>
+            </div>
+            {errors.password && <p className="block text-red-500 text-sm font-bold mb-2">La contraseña es requerida</p>}
+
+            {/**@PasswordConfirm is only render when the auth type is signup, and it is only use to validate that password is correct*/}
+            {
+              type === 'signup' ?
+                <div className="mb-4">
+                  <input {...register("passwordConfirm", {
+                    required: true, validate: {
+                      matchPassword: () => watch("password") === watch("passwordConfirm")
+                    }
+                  })} type="password" id="passwordConfirm" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
+                  <label className="block text-white text-sm font-bold mb-2" htmlFor="passwordConfirm">Repetir contraseña</label>
+                </div>
+                : undefined
+            }
+            {errors.passwordConfirm && <p className="block text-red-500 text-sm font-bold mb-2">Las contraseñas no coinciden</p>}
+
+            {/**@Submit button */}
+            <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{type === 'signin' ? 'Ingresar' : 'Registrarse'}</button>
+          </form>
         </div>
       </section>
       {/* Other signin or signup options */}
-      <h3>O ingresar con:</h3>
-      <section>
+      <section className='xl:ml-m2vw'>
+        <h3>O ingresar con:</h3>
         <button className='btn btn-primary btn-lg btn-block' onClick={() => signIn(providers.facebook.id)}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-facebook" viewBox="0 0 16 16">
-            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
-          </svg>
+          <FaFacebook />
         </button>
       </section>
     </>

@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     let result: any = undefined;
+    // console.log('backend data: ' + req.body)
+    // console.log('Metodo: ' + req.method)
     if (req.method === 'POST') {
         result = await fetch(`${process.env.managementBackend}/api/v1/menu`, {
             method: 'POST',
@@ -8,12 +10,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 'Content-Type': 'application/json',
                 Authorization: req.headers.authorization ?? 'No token provided'
             },
-            body: JSON.stringify(req.body)
+            body: JSON.stringify({
+                name: req.body?.name,
+                description: req.body?.description,
+                price: req.body?.price,
+                category: req.body?.category,
+                image: req.body?.image
+            })
         })
     } else if (req.method === 'GET') {
-        result = await fetch(`${process.env.managementBackend}/api/v1/menu?limit=1000`, {
-            method: 'GET',
-        })
+        if (req.query.type === 'all') {
+            result = await fetch(`${process.env.managementBackend}/api/v1/menu?limit=1000`, {
+                method: 'GET',
+            })
+        } else {
+            result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.query.id}`, {
+                method: 'GET',
+            })
+        }
     } else if (req.method === 'PATCH' && req.body.type === 'state') {
         result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.body.id}`, {
             method: 'PATCH',
@@ -54,11 +68,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     // console.log(data)
 
-    if (result.ok) {
-        res.status(200).json(data);
+    if (result?.ok) {
+        if (data.msg) {
+            res.status(400).json({
+                record: null,
+                records: null
+            })
+        } else {
+            res.status(200).json(data)
+        }
     } else {
-        res.status(data.error.statusCode).json({
-            message: data.message
+        // console.log(data)
+        res.status(400).json({
+            message: data.error.message,
+            record: null,
+            records: null,
         });
     }
 }

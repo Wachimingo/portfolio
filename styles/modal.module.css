@@ -1,0 +1,10 @@
+.aligment{
+    margin-left: 30%;
+    margin-top: -70vh;
+}
+
+@media only screen and (max-width: 600px) {
+    .aligment{
+        margin-left: 0.5%;
+    }
+  }

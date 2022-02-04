@@ -1,13 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { useEffect, memo } from 'react';
-const classes = require('../styles/modal.module.css');
-import { closeButton, closeXButton, formInput, formLabel, h3Title, modalBox, submitButton } from '../styles/modalsAndFormsInlineJS';
-import { submitReview, modifyReview } from '../controllers/reviewController';
+const classes = require('../../styles/modal.module.css');
+import { closeButton, closeXButton, formInput, formLabel, h3Title, modalBox, submitButton } from '../../styles/modalsAndFormsInlineJS';
+import { submitReview, modifyReview } from '../../controllers/reviewController';
 export const ReviewModal: any = memo((props: any) => {
     const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm();
 
     useEffect(() => {
-        // console.log(props.item.name)
         if (props.review) {
             setValue('review', props.review.review);
         }

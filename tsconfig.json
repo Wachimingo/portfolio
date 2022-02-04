@@ -24,7 +24,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/**/*.ts",
-    "**/**/*.tsx"
+    "**/**/*.tsx",
+    "components/checkouts/CheckoutForm.js"
   ],
   "exclude": [
     "node_modules",

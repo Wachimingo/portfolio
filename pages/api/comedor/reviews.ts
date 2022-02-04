@@ -61,18 +61,13 @@ const review = async (req: NextApiRequest, res: NextApiResponse) => {
     const data = await result?.json();
     // console.log(data)
     if (result?.ok) {
-        if (data.msg) {
-            res.status(400).json({
-                record: null,
-                records: null
-            })
-        } else {
-            res.status(200).json(data)
-        }
+        res.status(200).json({
+            record: data
+        })
     } else {
         // console.log(data)
         res.status(400).json({
-            message: data.error.message,
+            message: data.error.message ?? data.message,
             record: null,
             records: null,
         });

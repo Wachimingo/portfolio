@@ -1,12 +1,21 @@
-import type { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useState, useContext, memo } from 'react';
 import AuthContext from '../contexts/authContext';
 import Link from 'next/link';
 import { FaBars } from 'react-icons/fa'
 
-export const MainNavbar: FC = memo(() => {
+const MainNavbar: FC = () => {
     const { session }: any = useContext(AuthContext);
     const [navbarOpen, setNavbarOpen] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+    // Setting up useEffect to know when the component is mounted, so it can read the values from the session context
+    useEffect(() => {
+        if (!isMounted) {
+
+        }
+        setIsMounted(true)
+    }, []);
+    if (!isMounted) return <>loading</>
     return (
         <>
             <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-slate-800 mb-3 overflow-visible">
@@ -47,13 +56,19 @@ export const MainNavbar: FC = memo(() => {
                                         <a className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Catalogo</a>
                                     </Link>
                                 </li>
-                                <li onClick={() => {
-                                    document.getElementById('dropdown')?.classList.toggle('hidden')
-                                }}>
-                                    <Link href='/' passHref>
-                                        <a href="#" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Dashboard</a>
-                                    </Link>
-                                </li>
+                                {
+                                    session
+                                        ?
+                                        <li onClick={() => {
+                                            document.getElementById('dropdown')?.classList.toggle('hidden')
+                                        }}>
+                                            <Link href='/comedor/menu/sell' passHref>
+                                                <a href="#" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">{session.user.role !== 'user' ? 'Vender' : 'Comprar'}</a>
+                                            </Link>
+                                        </li>
+                                        : undefined
+                                }
+
                                 <li onClick={() => {
                                     document.getElementById('dropdown')?.classList.toggle('hidden')
                                 }}>
@@ -90,4 +105,7 @@ export const MainNavbar: FC = memo(() => {
             </nav>
         </>
     );
-});
+
+}
+
+export default MainNavbar

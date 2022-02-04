@@ -1,6 +1,7 @@
 import { FaAngleUp, FaTrash, FaCog, FaRegFolderOpen, FaStar } from "react-icons/fa";
 import { deleteItem, changeStateOfItem, updateItem, setAsFavorite, removeFavorite } from '../controllers/menuController';
 import Link from 'next/link'
+import { useState } from "react";
 const classes = require('../styles/catalog.module.css');
 
 const toggleCard = (id: string) => {
@@ -14,11 +15,11 @@ const toggleStar = (id: string) => {
 
 export const Card = (props: any) => {
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg">
+        <div className="max-w-sm rounded overflow-hidden shadow-lg" style={{ width: "25vw" }}>
             <img className="w-full" id={`img_${props.item._id}`} src={`${props.item.image}`} alt={props.item.name} />
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2" id={`title_${props.item._id}`}>{props.item.name}</div>
-                <p className="text-gray-700 text-base" id={`description_${props.item._id}`}>
+                <p className="text-gray-700 text-base text-sm" id={`description_${props.item._id}`}>
                     {props.item.description}
                 </p>
                 <p className="text-gray-700 text-base" id={`price_${props.item._id}`}>
@@ -33,6 +34,7 @@ export const Card = (props: any) => {
 }
 
 export const ControlButtons = (props: any) => {
+    const [state, setState] = useState(props.forToday)
     return (
         <div>
             <span
@@ -57,7 +59,7 @@ export const ControlButtons = (props: any) => {
                 data-bs-placement="top"
                 title={props.item.forToday ? "Desactivar" : "Activar"}
                 className={props.item.forToday ? `inline-block  ${classes.controlButtons} ${classes.isActive}` : `inline-block  ${classes.controlButtons}`}
-                onClick={() => changeStateOfItem(props.item._id, !props.item.forToday, props.token, toggleCard(props.item._id))}>
+                onClick={() => changeStateOfItem(props.item._id, state, props.token, toggleCard(props.item._id), setState(!state))}>
                 <FaAngleUp />
             </span>
             <span data-bs-toggle="tooltip" data-bs-placement="top" title="Review" className={`inline-block  ${classes.controlButtons}`}>

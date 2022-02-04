@@ -7,7 +7,6 @@ const AuthContext = createContext({})
 export const AuthProvider = ({ children }) => {
     const router = useRouter()
     const [session, setSession] = useState(() => getLocalStorage("session", undefined))
-    const [error, setError] = useState(undefined)
 
     useEffect(() => {
         setLocalStorage("session", session);
@@ -23,12 +22,17 @@ export const AuthProvider = ({ children }) => {
     }, [session]);
 
     const quitSession = async () => {
+        document.cookie = '';
+        document.cookie = '';
+        document.cookie = '';
+        document.cookie = '';
+        document.cookie = 'expires=Thu, 01 Jan 1970 00:00:00 UTC'
         setSession(undefined)
         router.replace('/');
     };
 
     return (
-        <AuthContext.Provider value={{ session, setSession, quitSession, error }}>
+        <AuthContext.Provider value={{ session, setSession, quitSession }}>
             {children}
         </AuthContext.Provider>
     )

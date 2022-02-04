@@ -1,8 +1,10 @@
 import { AuthProvider } from './../contexts/authContext';
 import 'tailwindcss/tailwind.css';
-import dynamic from 'next/dynamic';
-const MainNavbar = dynamic(() => import('../components/NavBars').then((mod) => mod.MainNavbar), { ssr: false })
-import './../styles/globals.css'
+import MainNavbar from '../components/MainNavbar.server';
+import './../styles/globals.css';
+import 'react-toastify/dist/ReactToastify.css';
+// import '../node_modules/react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -11,6 +13,7 @@ function MyApp({ Component, pageProps }) {
         <MainNavbar />
         <Component {...pageProps} />
       </AuthProvider>
+      <ToastContainer />
     </>
   )
 }

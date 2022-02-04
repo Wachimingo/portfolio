@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     let result: any = undefined;
-    // console.log('backend data: ' + req.body)
-    // console.log('Metodo: ' + req.method)
     if (req.method === 'POST') {
         result = await fetch(`${process.env.managementBackend}/api/v1/menu`, {
             method: 'POST',
@@ -24,9 +22,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 method: 'GET',
             })
         } else {
-            result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.query.id}`, {
-                method: 'GET',
-            })
+            if (req.query.id !== '') {
+                result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.query.id}`, {
+                    method: 'GET',
+                })
+            } else {
+                res.status(400).json({
+                    message: 'No ID provided',
+                    record: null,
+                    records: null
+                })
+            }
         }
     } else if (req.method === 'PATCH' && req.body.type === 'state') {
         result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.body.id}`, {
@@ -58,19 +64,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.body.id}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json',
                 Authorization: req.headers.authorization ?? 'No token provided'
             }
         })
     }
 
-    const data = await result.json();
-
-    // console.log(data)
-
+    const data = await result.json() ?? undefined;
     if (result?.ok) {
         if (data.msg) {
             res.status(400).json({
+                message: data.msg,
                 record: null,
                 records: null
             })

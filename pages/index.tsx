@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import AuthContext from './../contexts/authContext'
 import Head from 'next/head';
 import Image from 'next/image';
+import { toast } from 'react-toastify';
 
 const Home: NextPage = () => {
   const { session }: any = useContext(AuthContext);

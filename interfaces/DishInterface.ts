@@ -1,6 +1,6 @@
 export type Dish = {
     _id: string,
-    ratingAverage: number,
+    ratingsAverage: number,
     ratingsQuantity: number
     image: string;
     createdAt: Date,
@@ -9,6 +9,9 @@ export type Dish = {
     description: string;
     price: number;
     category: string;
+    reviews: [],
+    favoriteQuantity: number
+    __v: string
 } | undefined
 
 export type Response = {

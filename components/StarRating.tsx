@@ -8,8 +8,9 @@ export const StarRating = memo((props: any) => {
         props.setShowModal('')
     }
     useEffect(() => {
-        const selectedStar = document.getElementById(`star${props.stars}`);
-        selectedStar.checked = true
+        if (props.stars) {
+            document.getElementById(`star${props.stars}`)?.ariaChecked;
+        }
         // console.log(document.getElementById(`star${props.stars}`).checked)
     }, [props.star])
     return (

@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
-import { Dish, Response } from '../interfaces/DishInterface'
-import { resizedataURL } from './imgController'
+import { Dish, SelectedDishes } from '../interfaces/DishInterface';
+import { resizedataURL } from './imgController';
 
 export const getItems = async (setItems: Function) => {
     const response = await fetch('/api/comedor/dish?type=all', {
@@ -198,29 +198,31 @@ export const reviewItem = async (dishId: string, userId: string, token: string) 
 
 export const increaseCount = (
     i: number,
-    dish: any,
-    dishCounter: any,
-    dishCounters: any,
+    dish: Dish,
+    dishCounter: number,
+    dishCounters: number[],
     setDishCounter: Function,
     totalDishes: number,
     setTotalDishes: Function,
-    selectedDishes: any,
+    selectedDishes: SelectedDishes[],
     setSelectedDishes: Function,
     totalPrice: number,
     setTotalPrice: Function
 ) => {
     if (dishCounter < 1) {
         let dishes = [...selectedDishes]
-        // let newDish: any = { ...dish }
-        delete dish!.createdAt
-        delete dish!.description
-        delete dish!.forToday
-        delete dish!.favoriteQuantity
-        delete dish!.ratingsAverage
-        delete dish!.ratingsQuantity
-        // delete dish!.image
-        delete dish!.__v
-        dishes.push(dish)
+        let newDish: any = { ...dish }
+        delete newDish!.category
+        delete newDish!.createdAt
+        delete newDish!.description
+        delete newDish!.forToday
+        delete newDish!.favoriteQuantity
+        delete newDish!.ratingsAverage
+        delete newDish!.ratingsQuantity
+        delete newDish!.image
+        delete newDish!.__v
+        delete newDish!._id
+        dishes.push(newDish)
         setSelectedDishes(dishes)
     }
     dishCounter++;
@@ -235,12 +237,12 @@ export const increaseCount = (
 export const decreaseCount = (
     i: number,
     dish: Dish,
-    dishCounter: any,
-    dishCounters: any,
+    dishCounter: number,
+    dishCounters: number[],
     setDishCounter: Function,
     totalDishes: number,
     setTotalDishes: Function,
-    selectedDishes: any,
+    selectedDishes: SelectedDishes[],
     setSelectedDishes: Function,
     totalPrice: number,
     setTotalPrice: Function
@@ -256,12 +258,14 @@ export const decreaseCount = (
         setTotalPrice(totalPrice);
     } else if (dishCounter < 1) {
         let dishes = [...selectedDishes]
-        const index = selectedDishes.indexOf(dish);
-        if (index > -1) {
-            dishes[index] = undefined
-            dishes.splice(index, 1); // 2nd parameter means remove one item only
-        }
-        setSelectedDishes(dishes)
+        const newDishes: SelectedDishes[] = dishes.filter((item: SelectedDishes) => {
+            if (item.name === dish!.name) {
+                return undefined
+            } else {
+                return item
+            }
+        })
+        setSelectedDishes(newDishes)
     }
 }
 
@@ -271,9 +275,9 @@ export const processTransaction = async (
     token: string,
     userId: string,
     customer: string | undefined,
-    selectedDishes: any,
-    dishCounters: any,
-    items: any,
+    selectedDishes: SelectedDishes[],
+    dishCounters: number[],
+    items: Dish[],
 ) => {
     let dishes = [...selectedDishes]
     dishes.forEach((dish: any) => {
@@ -306,4 +310,16 @@ export const processTransaction = async (
     } else {
         toast.error(data.error)
     }
+}
+
+export const clearSellValues = (
+    setDishCounter: Function,
+    setTotalDishes: Function,
+    setSelectedDishes: Function,
+    setTotalPrice: Function
+) => {
+    setDishCounter([]);
+    setTotalDishes(0);
+    setSelectedDishes([]);
+    setTotalPrice(0);
 }

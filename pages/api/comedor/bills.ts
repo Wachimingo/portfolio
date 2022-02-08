@@ -15,13 +15,13 @@ const bills = async (req: NextApiRequest, res: NextApiResponse) => {
                 totalDishes: req.body.totalDishes,
                 totalPrice: req.body.totalPrice,
                 status: req.body.status,
+                paymentIntent: req.body.paymentIntent,
                 isPaid: req.body.isPaid,
                 body: req.body.body,
             })
         })
     }
     const data = await result?.json();
-    // console.log("TCL: data", data)
     if (result?.ok) {
         res.status(200).json({
             data

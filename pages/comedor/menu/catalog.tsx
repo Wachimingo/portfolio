@@ -43,26 +43,28 @@ const catalog = ({ items, favs, categories, token, userId, error }: propsType) =
                 <meta name="Catalogo" content="Catalogo de platillos" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <h1>Catalogo</h1>
-            <button type="button" className={`bg-cyan-500 text-white ${classes.addButton}`} onClick={() => setShowModal('')}>+</button>
-            {/* Display items section */}
-            <section>
-                {items?.map((item: any) => {
-                    return (
-                        <div key={item._id} id={`itemBody_${item._id}`} className={item.forToday ? `card inline-block mx-2 ${classes.itemIsForToday}` : `card inline-block mx-2`} >
-                            <ControlButtons
-                                token={token}
-                                item={item}
-                                favs={favs}
-                                setItem={setItem}
-                                setShowModal={setShowModal}
-                                _id={userId}
-                            />
-                            <Card item={item} />
-                        </div>
-                    )
-                })}
-            </section>
+            <div className={showModal === '' ? 'pointer-events-none' : ''}>
+                <h1>Catalogo</h1>
+                <button type="button" className={`bg-cyan-500 text-white ${classes.addButton}`} onClick={() => setShowModal('')}>+</button>
+                {/* Display items section */}
+                <section>
+                    {items?.map((item: any) => {
+                        return (
+                            <div key={item._id} id={`itemBody_${item._id}`} className={item.forToday ? `card inline-block mx-2 ${classes.itemIsForToday}` : `card inline-block mx-2`} >
+                                <ControlButtons
+                                    token={token}
+                                    item={item}
+                                    favs={favs}
+                                    setItem={setItem}
+                                    setShowModal={setShowModal}
+                                    _id={userId}
+                                />
+                                <Card item={item} />
+                            </div>
+                        )
+                    })}
+                </section>
+            </div>
             {/* Modal box */}
             {
                 session?.user?.role === 'admin' ?? 'helper'

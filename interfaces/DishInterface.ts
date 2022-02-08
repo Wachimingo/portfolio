@@ -28,3 +28,9 @@ export type Categories = {
     _id: string,
     name: string
 }
+
+export type SelectedDishes = {
+    id: string,
+    name: string,
+    price: number
+}

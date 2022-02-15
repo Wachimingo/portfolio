@@ -32,5 +32,6 @@ export type Categories = {
 export type SelectedDishes = {
     id: string,
     name: string,
-    price: number
+    price: number,
+    quantity: number | undefined
 }

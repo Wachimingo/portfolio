@@ -1,15 +1,16 @@
 import type { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic'
 import Head from 'next/head';
-const classes = require('./../../../styles/catalog.module.css');
+const classes = require('./../../../../styles/catalog.module.css');
 import { useState, useContext, useEffect } from 'react';
-import AuthContext from '../../../contexts/authContext';
-import { Card, ControlButtons } from '../../../components/Card'
-import { Dish, Favs, Categories } from '../../../interfaces/DishInterface';
-import { imageHandler } from '../../../controllers/imgController';
+import AuthContext from '../../../../contexts/authContext';
+import { Card, ControlButtons } from '../../../../components/Card'
+import { Dish, Favs, Categories } from '../../../../interfaces/DishInterface';
+import { imageHandler } from '../../../../controllers/imgController';
 import { toast } from 'react-toastify';
+import projectLayout from '../../../../layouts/projectLayout';
 
-const CatalogModal = dynamic<any>(() => import('../../../components/modals/CatalogModal').then((mod) => mod.CatalogModal));
+const CatalogModal = dynamic<any>(() => import('../../../../components/modals/CatalogModal').then((mod) => mod.CatalogModal));
 
 interface propsType {
     items: Dish[],
@@ -48,17 +49,22 @@ const catalog = ({ items, favs, categories, token, userId, error }: propsType) =
                 <button type="button" className={`bg-cyan-500 text-white ${classes.addButton}`} onClick={() => setShowModal('')}>+</button>
                 {/* Display items section */}
                 <section>
-                    {items?.map((item: any) => {
+                    {items?.map((item: Dish) => {
                         return (
-                            <div key={item._id} id={`itemBody_${item._id}`} className={item.forToday ? `card inline-block mx-2 ${classes.itemIsForToday}` : `card inline-block mx-2`} >
-                                <ControlButtons
-                                    token={token}
-                                    item={item}
-                                    favs={favs}
-                                    setItem={setItem}
-                                    setShowModal={setShowModal}
-                                    _id={userId}
-                                />
+                            <div key={item!._id} id={`itemBody_${item!._id}`} className={item!.forToday ? `card inline-block mx-2 ${classes.itemIsForToday}` : `card inline-block mx-2`} >
+                                {
+                                    session?.user.role === 'admin' ?? 'helper'
+                                        ?
+                                        <ControlButtons
+                                            token={token}
+                                            item={item}
+                                            favs={favs}
+                                            setItem={setItem}
+                                            setShowModal={setShowModal}
+                                            _id={userId}
+                                        />
+                                        : undefined
+                                }
                                 <Card item={item} />
                             </div>
                         )
@@ -89,6 +95,8 @@ const catalog = ({ items, favs, categories, token, userId, error }: propsType) =
 }
 
 export default catalog;
+
+catalog.Layout = projectLayout;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {

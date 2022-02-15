@@ -1,25 +1,23 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 const navBarSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
     },
-    navType: {
+    link: {
         type: String,
         required: true
-    },
-    value: {
-        type: String,
-        required: false
-    },
-    childObject: {
-        type: Object,
-        required: false
     },
     role: {
         type: Array,
         required: true,
+    },
+    projectId: {
+        type: Types.ObjectId
+    },
+    project: {
+        type: String
     }
 });
 

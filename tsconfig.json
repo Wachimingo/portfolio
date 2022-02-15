@@ -26,7 +26,8 @@
     "**/**/*.ts",
     "**/**/*.tsx",
     "components/checkouts/CheckoutForm.js",
-    "models/billModel.ts"
+    "models/billModel.ts",
+    "pages/_app.js"
   ],
   "exclude": [
     "node_modules",

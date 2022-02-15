@@ -63,7 +63,7 @@ export const ControlButtons = (props: any) => {
                 <FaAngleUp />
             </span>
             <span data-bs-toggle="tooltip" data-bs-placement="top" title="Review" className={`inline-block  ${classes.controlButtons}`}>
-                <Link href={`/comedor/menu/review/${props.item?.id}`} passHref>
+                <Link href={`/projects/comedor/menu/review/${props.item?.id}`} passHref>
                     <a><FaRegFolderOpen /></a>
                 </Link>
             </span>
@@ -82,6 +82,96 @@ export const ControlButtons = (props: any) => {
                 }}>
                 <FaStar />
             </span>
+        </div>
+    )
+}
+
+export const OrderCard = ({ order, role }: any) => {
+    return (
+        <div className="max-w-sm rounded overflow-hidden shadow-lg card inline-block mx-2" style={{ width: "25vw" }} key={'order' + order._id}>
+            <div className="px-6 py-4">
+                {
+                    role === 'admin'
+                        ?
+                        <div className="font-bold text-xl mb-2" >
+                            <h5>
+                                {order.customer !== '' ? 'Cliente: ' + order.customer : 'Orden realizada por: ' + order.user.name}
+                            </h5>
+                        </div>
+                        : undefined
+                }
+
+                <p className="text-gray-700 text-base text-sm" >
+                    Total de platos: {order.totalDishes}
+                </p>
+                <p className="text-gray-700 text-base" >
+                    Precio: ${order.totalPrice}
+                </p>
+                <p className="text-gray-700 text-base" >
+                    Fecha de orden: {order.createdAt}
+                </p>
+                {
+                    order.status === 'isPending'
+                        ?
+                        <p className="text-red-700 text-base" >
+                            <span className="text-gray-700">Estado:</span> Pendiente
+                        </p> : undefined
+                }
+                {
+                    order.status === 'isReady'
+                        ?
+                        <p className="text-green-700 text-base" >
+                            <span className="text-gray-700">Estado:</span> Lista para retirar
+                        </p> : undefined
+                }
+                {
+                    order.status === 'completed'
+                        ?
+                        <p className="text-black text-base" >
+                            <span className="text-gray-700">Estado:</span> Completada
+                        </p> : undefined
+                }
+                <p className="text-gray-700 text-base" >
+                    {order.isPaid ? 'Orden pagada' : 'Pago pendiente'}
+                </p>
+            </div>
+            <ul className="text-left">
+                {
+                    order.body.map((dish: any, j: number) => {
+                        return (
+                            <li>{dish.name}</li>
+                        )
+                    })
+                }
+            </ul>
+            <br />
+            <OrderControls />
+            <br />
+        </div>
+    )
+}
+
+export const OrderControls = ({ role }: any) => {
+    return (
+        <div>
+            {
+                role !== 'user'
+                    ?
+                    <button
+                        // onClick={() => processTransaction(props.totalPrice, props.totalDishes, props.token, props.userId, props.customer, props.selectedDishes, props.dishCounters, props.items)}
+                        className="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded"
+                    >
+                        Orden Lista
+                    </button> : undefined
+            }
+
+            <button
+                // onClick={() => processTransaction(props.totalPrice, props.totalDishes, props.token, props.userId, props.customer, props.selectedDishes, props.dishCounters, props.items)}
+                className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+                style={{ marginLeft: "2vw" }}
+            >
+                Cancelar
+            </button>
         </div>
     )
 }

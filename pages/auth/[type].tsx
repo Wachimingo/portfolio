@@ -6,87 +6,38 @@ import Head from 'next/head';
 import AuthContext from './../../contexts/authContext';
 import { getProviders, signIn } from "next-auth/react"
 import { FaFacebook } from 'react-icons/fa'
-import { AuthProps, Login, Register } from '../../interfaces/AuthInterface';
+import { AuthProps } from '../../interfaces/AuthInterface';
+import { signin, signup } from '../../controllers/authController';
 
 const Auth = ({ type, providers }: AuthProps) => {
   const router = useRouter();
   const { setSession, quitSession }: any = useContext(AuthContext);
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
-  const signOut = () => {
-    quitSession();
-    router.push('/');
+  const authActions: any = {
+    "signout": () => {
+      quitSession();
+      router.replace('/');
+    },
+    "success": () => {
+      const newSession = {
+        status: 'success',
+        user: {
+          role: router.query.role,
+          name: router.query.name,
+          email: router.query.email,
+          picture: router.query.picture,
+        },
+        token: router.query.token
+      }
+      setSession(newSession);
+    },
+    "signin": () => { }
   }
 
   useEffect(() => {
-    // type === 'signout' ? signOut() : null;
-    switch (type) {
-      case 'signout':
-        signOut();
-        break;
-      case 'success':
-        // console.log(router.query)
-        const newSession = {
-          status: 'success',
-          user: {
-            role: router.query.role,
-            name: router.query.name,
-            email: router.query.email,
-            picture: router.query.picture,
-          },
-          token: router.query.token
-        }
-        setSession(newSession);
-        router.push('/');
-        break;
-    }
-
+    authActions[type] ? authActions[type]() : console.log('Query did not match', router.query)
   }, [type])
-
-  const signin = async (credentials: Login) => {
-    const response = await fetch('/api/auth', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: credentials.email,
-        password: credentials.password,
-        type: 'signin'
-      })
-    })
-    // .then(res => res.json()).then(res => handleResponse(res))
-    const data = await response.json();
-
-    if (response.ok) {
-      setSession(data);
-      if (router.query.page) {
-        router.push(`${router.query.page}`);
-      } else {
-        router.push('/');
-      }
-    } else {
-      console.log(data.message);
-    }
-  }
-
-  const signup = async (input: Register) => {
-    const response = await fetch('/api/auth', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: input.name.trim(),
-        email: input.email,
-        password: input.password,
-        passwordConfirm: input.passwordConfirm,
-        type: 'signup'
-      })
-    })
-    const data = await response.json();
-    signIn("email", { email: input.email });
-  }
 
   return (
     <>
@@ -97,7 +48,13 @@ const Auth = ({ type, providers }: AuthProps) => {
       <h1 className="xl:ml-m2vw">{type}</h1>
       <section className="">
         <div className='xl:w-3/6 xl:ml-96 sm:ml-1'>
-          <form className='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800' onSubmit={type === 'signin' ? handleSubmit(signin) : handleSubmit(signup)}>
+          <form
+            className='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800'
+            onSubmit={
+              type === 'signin'
+                ? handleSubmit((data: any) => signin(data, setSession, router))
+                : handleSubmit((data: any) => signup(data, signIn))}
+          >
 
             {/**@name is only render when the auth type is signup, and it is only use to validate that password is correct*/}
             {

@@ -4,7 +4,7 @@ import { closeXButton, h3Title, modalBox } from '../../styles/modalsAndFormsInli
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../../components/checkouts/CheckoutForm";
-import { creditCard } from "../../controllers/checkoutController";
+import { bitcoin, creditCard } from "../../controllers/checkoutController";
 import { Dish } from "../../interfaces/DishInterface";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -39,12 +39,7 @@ export const CheckoutModal = memo(({
     const [type, setType] = useState('details')
 
     useEffect(() => {
-        // if (props.review) {
-        //     setValue('review', props.review.review);
-        // }
-        // if (props.showModal === 'hidden') {
-        //     reset()
-        // }
+        if (showModal === 'hidden') setType('details')
     }, [showModal])
 
     const closeModal = () => {
@@ -99,6 +94,11 @@ export const CheckoutModal = memo(({
                                         <CheckoutForm />
                                     </Elements>
                                     : undefined
+                                : undefined
+                        }
+                        {
+                            type === 'bitcoin'
+                                ? <iframe src={`https://dev-checkout.opennode.com/${clientSecret}`} style={{ height: "70vh", width: "100%", border: "none" }}></iframe>
                                 : undefined
                         }
                     </div>
@@ -206,13 +206,26 @@ const transactionDetails = (
             >
                 Tarjeta
             </button>
-            {/* <button
-                // onClick={() => processTransaction(props.totalPrice, props.totalDishes, props.token, props.userId, props.customer, props.selectedDishes, props.dishCounters, props.items)}
+            <button
+                onClick={
+                    () => bitcoin(
+                        items,
+                        selectedDishes,
+                        dishCounters,
+                        totalDishes,
+                        totalPrice,
+                        token,
+                        userId,
+                        customer,
+                        setClientSecret,
+                        setType
+                    )
+                }
                 className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 style={{ marginLeft: "2px" }}
             >
                 Bitcoin
-            </button> */}
+            </button>
         </div>
     )
 }

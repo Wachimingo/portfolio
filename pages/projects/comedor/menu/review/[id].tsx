@@ -1,12 +1,12 @@
 import type { GetServerSideProps } from "next";
 import Head from 'next/head'
-import { StarRating, drawStars } from "../../../../components/StarRating";
-import { Card } from '../../../../components/Card'
-import { ReviewModal } from "../../../../components/modals/ReviewModal";
+import { StarRating, drawStars } from "../../../../../components/StarRating";
+import { Card } from '../../../../../components/Card'
+import { ReviewModal } from "../../../../../components/modals/ReviewModal";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Dish } from "../../../../interfaces/DishInterface";
-import { Review } from "../../../../interfaces/ReviewInterface";
+import { Dish } from "../../../../../interfaces/DishInterface";
+import { Review } from "../../../../../interfaces/ReviewInterface";
 import { toast } from "react-toastify";
 
 interface ReviewProps {

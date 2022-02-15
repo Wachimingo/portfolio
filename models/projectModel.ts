@@ -1,0 +1,21 @@
+import mongoose from 'mongoose';
+
+const projectSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        maxlength: 50
+    },
+    description: {
+        type: String
+    },
+    category: {
+        type: String
+    },
+    status: {
+        type: String,
+        enum: ['on developement', 'completed', 'on maintanance', 'deprecated']
+    }
+});
+
+export default mongoose.models.Project || mongoose.model('Project', projectSchema);

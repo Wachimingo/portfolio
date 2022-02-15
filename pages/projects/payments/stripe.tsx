@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Stripe, loadStripe } from '@stripe/stripe-js';
 import { Elements } from "@stripe/react-stripe-js";
 
-import CheckoutForm from "../../components/checkouts/CheckoutForm";
+import CheckoutForm from "../../../components/checkouts/CheckoutForm";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 

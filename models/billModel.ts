@@ -1,11 +1,11 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 const billingSchema = new mongoose.Schema(
   {
     //This billing Schema is the header for the bill, the details will be store in detail billing schema
     //Logged user ['Admin', 'Helper']
     user: {
-      type: mongoose.Schema.ObjectId,
+      type: Types.ObjectId,
       ref: 'User',
       required: [true, 'El recibo debe contener el ID del vendedor o comprador'],
     },

@@ -1,0 +1,7 @@
+{
+    "order": {
+        "pending": "Pendientes",
+        "ready": "Listas",
+        "completed": "Completadas"
+    }
+}

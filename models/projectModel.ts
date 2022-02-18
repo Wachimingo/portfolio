@@ -9,12 +9,22 @@ const projectSchema = new mongoose.Schema({
     description: {
         type: String
     },
+    image: {
+        type: String
+    },
     category: {
         type: String
     },
     status: {
         type: String,
-        enum: ['on developement', 'completed', 'on maintanance', 'deprecated']
+    },
+    link: {
+        type: String
+    },
+    locale: {
+        type: String,
+        enum: ['en', 'es'],
+        required: true
     }
 });
 

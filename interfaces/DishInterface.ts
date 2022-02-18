@@ -1,3 +1,5 @@
+import { User } from "./AuthInterface"
+
 export type Dish = {
     _id: string,
     ratingsAverage: number,
@@ -8,7 +10,7 @@ export type Dish = {
     name: string;
     description: string;
     price: number;
-    category: string;
+    category: any;
     reviews: [],
     favoriteQuantity: number
     __v: string
@@ -34,4 +36,20 @@ export type SelectedDishes = {
     name: string,
     price: number,
     quantity: number | undefined
+}
+
+export type Order = {
+    isFiado: Boolean,
+    status: string,
+    isPaid: Boolean,
+    _id: string,
+    user: User,
+    customer: string,
+    totalDishes: number,
+    totalPrice: number,
+    paymentIntent: string,
+    body: SelectedDishes[],
+    createdAt: string,
+    __v: number,
+    id: string
 }

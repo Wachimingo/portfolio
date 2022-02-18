@@ -5,7 +5,7 @@ import Project from './../../models/projectModel';
 const Projects = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === 'GET') {
         try {
-            const data = await Project.find({}).select('-__v');
+            const data = await Project.find({}).where('locale').equals(req.query.locale).select('-__v');
             res.status(200).json(data)
         } catch (error) {
             res.status(500).json(error)

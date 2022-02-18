@@ -18,6 +18,10 @@ const navBarSchema = new mongoose.Schema({
     },
     project: {
         type: String
+    },
+    locale: {
+        type: String,
+        enum: ['en', 'es']
     }
 });
 

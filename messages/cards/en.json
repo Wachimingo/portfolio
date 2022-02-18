@@ -1,0 +1,20 @@
+{
+    "OrderCard": {
+        "submitter": "Submited by:",
+        "totalDishes": "Total dishes",
+        "price": "Price",
+        "date": "Ordered at",
+        "state": "State",
+        "pending": "Pending",
+        "ready": "Ready to pick up",
+        "completed": "Completed",
+        "complete": "Set as Completed",
+        "payed": "Payed",
+        "paymentPending": "Payment pending"
+    },
+    "OrderControls": {
+        "ready": "Set to ready",
+        "cancel": "Cancel order",
+        "complete": "Set as Completed"
+    }
+}

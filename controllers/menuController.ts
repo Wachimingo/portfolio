@@ -126,7 +126,7 @@ export const changeStateOfItem = async (id: string, state: boolean, token: strin
         },
         body: JSON.stringify({
             id,
-            state,
+            state: !state,
             type: 'state'
         })
     });

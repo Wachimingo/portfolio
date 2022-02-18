@@ -1,23 +1,67 @@
 import { GetServerSideProps } from "next";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { OrderCard } from "../../../components/Card";
-import SideBar from "../../../components/sideBar";
-import projectLayout from "../../../layouts/projectLayout"
+import projectLayout from "../../../layouts/projectLayout";
+import Image from 'next/image'
+import { useTranslations } from "next-intl";
+import Carousel from "../../../components/Carousel";
+const classes = require('../../../styles/comedorIndex.module.css');
 
-const index = ({ orders, role, nav, Component, pageProps }: any) => {
+const index = ({ items }: any) => {
+    const t = useTranslations("index");
     return (
         <>
-            {
-                orders.map((order: any, i: number) => {
-                    return (
-                        <div key={'order' + i}>
-                            <OrderCard order={order} role={role} />
-                        </div>
-                    )
-                })
-            }
-        </>
+            <br />
+            {/* Main section */}
+            <section className={`text-center`}>
+                <div className="text-black text-xl text-bold bg-white w-72" style={{ marginLeft: "42vw" }}>
+                    <h1>{t("welcome")}</h1>
+                </div>
+                <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
+                <br />
+                <h2>{t("slogan")}</h2>
+                <br />
+                <p>{t("todayMenu")}</p>
+                <Carousel items={items} />
+                {/* <Link href="/menu/sell" passHref>
+          <a className="btn btn-success" style={{ width: "25vw" }}>Comprar</a>
+        </Link> */}
+
+            </section>
+            <br />
+            <br />
+            <section className={`text-center`}>
+                <h3>{t("waiting")}</h3>
+                <br />
+                <div>
+                    <div className="inline-block">
+                        <h4>{t("breakfast")}</h4>
+                        <Image
+                            src='/assets/breakfast.jpg'
+                            alt="breakfast"
+                            width="300"
+                            height="300"
+                        />
+                    </div>
+                    <div className="inline-block ml-24">
+                        <h4>{t("lunch")}</h4>
+                        <Image
+                            src='/assets/lunch.jpg'
+                            alt="breakfast"
+                            width="300"
+                            height="300"
+                        />
+                    </div>
+                    <div className="inline-block ml-24">
+                        <h4>{t("dinner")}</h4>
+                        <Image
+                            src='/assets/dinner.jpg'
+                            alt="breakfast"
+                            width="300"
+                            height="300"
+                        />
+                    </div>
+                </div>
+            </section>
+        </ >
     )
 }
 
@@ -27,31 +71,26 @@ index.Layout = projectLayout;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
-        let result: any = undefined;
-        if (context.req.cookies.role !== 'user') {
-            result = await fetch(`${process.env.managementBackend}/api/v1/bills/orders?status=status&ifValue=isPending`, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    Authorization: `Bearer ${context.req.cookies.token}`
-                }
-            });
-        } else {
-            result = await fetch(`${process.env.managementBackend}/api/v1/bills/ownedOrders?status=status&ifValue=isPending`, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    Authorization: `Bearer ${context.req.cookies.token}`
-                }
-            });
-        }
+        const classes = require('../../../styles/comedorIndex.module.css');
+        const res = await fetch(`${process.env.managementBackend}/api/v1/menu/forToday?limit=10`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                Authorization: 'Bearer ' + context.req.cookies.token
+            }
+        });
 
-        let orders = await result.json() ?? [];
-
+        const items = await res.json() ?? [];
+        // console.log("TCL: getServerSideProps:GetServerSideProps -> items", items)
         return {
             props: {
-                orders: orders.records ?? [],
-                role: context.req.cookies.role ?? null
+                items: items.data,
+                messages: {
+                    ...require(`../../../messages/index/comedor/${context.locale}.json`),
+                    ...require(`../../../messages/navbar/${context.locale}.json`),
+                    // ...require(`../../../messages/cards/${context.locale}.json`),
+                },
+                customClass: classes.backgroundImage1
             }
         }
     } catch (error) {

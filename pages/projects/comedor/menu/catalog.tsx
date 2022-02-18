@@ -1,4 +1,5 @@
 import type { GetServerSideProps } from 'next';
+import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic'
 import Head from 'next/head';
 const classes = require('./../../../../styles/catalog.module.css');
@@ -27,6 +28,7 @@ const catalog = ({ items, favs, categories, token, userId, error }: propsType) =
     const [item, setItem] = useState<Dish>(undefined); // Use for modify/update existing item
     const [showModal, setShowModal] = useState('hidden'); // 'hidden' to have the modal closed and '' to open it
     const [isMounted, setIsMounted] = useState(false);
+    const t = useTranslations("catalog");
     useEffect(() => {
         if (!isMounted) {
             for (let index = 0; index < error.length; index++) {
@@ -36,16 +38,16 @@ const catalog = ({ items, favs, categories, token, userId, error }: propsType) =
         setIsMounted(true)
     }, [])
 
-    if (!items) return <>No se encontro el catalogo</>
+    if (!items) return <>{t("error")}</>
     return (
         <>
             <Head>
-                <title>Catalogo</title>
-                <meta name="Catalogo" content="Catalogo de platillos" />
+                <title>{t("title")}</title>
+                <meta name={t("catalog")} content={t("content")} />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={showModal === '' ? 'pointer-events-none' : ''}>
-                <h1>Catalogo</h1>
+                <h1>{t("title")}</h1>
                 <button type="button" className={`bg-cyan-500 text-white ${classes.addButton}`} onClick={() => setShowModal('')}>+</button>
                 {/* Display items section */}
                 <section>
@@ -137,6 +139,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 categories: categories.records,
                 token: context.req.cookies.token ?? null,
                 userId: context.req.cookies.userId ?? null,
+                messages: {
+                    ...require(`../../../../messages/catalog/${context.locale}.json`),
+                    ...require(`../../../../messages/navbar/${context.locale}.json`),
+                },
                 error,
             }
         }

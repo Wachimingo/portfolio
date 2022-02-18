@@ -70,6 +70,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const data = await result.json() ?? undefined;
+
     if (result?.ok) {
         if (data.msg) {
             res.status(400).json({

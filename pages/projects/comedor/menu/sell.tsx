@@ -7,6 +7,7 @@ import { increaseCount, decreaseCount, clearSellValues } from "../../../../contr
 import { CheckoutModal } from "../../../../components/modals/CheckoutModal";
 import { Dish, SelectedDishes } from "../../../../interfaces/DishInterface";
 import projectLayout from "../../../../layouts/projectLayout";
+import { useTranslations } from "next-intl";
 const classes = require('../../../../styles/tooltip.module.css');
 
 type SellProps = {
@@ -23,7 +24,8 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
     const [totalDishes, setTotalDishes] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
     const [showModal, setShowModal] = useState<string>('hidden'); // 'hidden' to have the modal closed and '' to open it
-    const [loaded, setLoaded] = useState(false)
+    const [loaded, setLoaded] = useState(false);
+    const t = useTranslations("sell");
 
     useEffect(() => {
         if (!loaded) {
@@ -36,26 +38,26 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
         setLoaded(true);
     }, [showModal])
     if (!role) {
-        return (<>Por favor ingresa a tu perfil o si no tiene crea uno para acceder a esta funcion</>)
+        return (<>{t("error")}</>)
     } else {
         return (
             <>
                 <Head>
-                    <title>{role !== 'user' ? 'Vender' : 'Comprar'}</title>
-                    <meta name="Vender" content={role !== 'user' ? 'Vender' : 'Comprar'} />
+                    <title>{role !== 'user' ? t("sell") : t("buy")}</title>
+                    <meta name={role !== 'user' ? t("sell") : t("buy")} content={role !== 'user' ? t("sell") : t("buy")} />
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
                 <div className={showModal === '' ? 'pointer-events-none' : ''}>
                     <section>
-                        <h1>{role !== 'user' ? 'Vender platos' : 'Comprar'}</h1>
+                        <h1>{role !== 'user' ? t("sell") : t("buy")} dishes</h1>
                         <br />
                         <div className='card inline-block mx-2'>
                             {
                                 items.map((item: Dish, i: number) => {
                                     return (
-                                        <div className="card inline-block mx-2">
+                                        <div key={`card` + i} className="card inline-block mx-2">
                                             <div onClick={() => increaseCount(i, item, dishCounters[i], dishCounters, setDishCounters, totalDishes, setTotalDishes, selectedDishes, setSelectedDishes, totalPrice, setTotalPrice)} className={`${classes.tooltip} cursor-pointer hover:border-4 hover:border-cyan-600`}>
-                                                <span className={classes.tooltiptext}>Añadir platillo</span>
+                                                <span className={classes.tooltiptext}>{t("add")}</span>
                                                 <Card item={item} />
                                             </div>
                                             <br />
@@ -75,15 +77,15 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                     </section>
                     <br />
                     <section>
-                        <p>Informacion de venta</p>
+                        <p>{t("info")}</p>
                         <div className='card inline-block mx-2'>
                             <table className="table-auto border-2">
                                 <thead>
                                     <tr className="border-2">
                                         <th className="border-2">#</th>
-                                        <th className="border-2">Plato</th>
-                                        <th className="border-2">Cantidad</th>
-                                        <th className="border-2">Precio</th>
+                                        <th className="border-2">{t("dish")}</th>
+                                        <th className="border-2">{t("quantity")}</th>
+                                        <th className="border-2">{t("price")}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -99,14 +101,12 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                                             return (
                                                 dishCounters[index] > 0
                                                     ?
-                                                    <>
-                                                        <tr className="border-2">
-                                                            <td className="border-2">{i + 1}</td>
-                                                            <td className="border-2">{item!.name}</td>
-                                                            <td className="border-2">{dishCounters[index]}</td>
-                                                            <td className="border-2">${dishCounters[index] * item!.price}</td>
-                                                        </tr>
-                                                    </>
+                                                    <tr key={`selected` + i} className="border-2">
+                                                        <td className="border-2">{i + 1}</td>
+                                                        <td className="border-2">{item!.name}</td>
+                                                        <td className="border-2">{dishCounters[index]}</td>
+                                                        <td className="border-2">${dishCounters[index] * item!.price}</td>
+                                                    </tr>
                                                     : undefined
                                             )
                                         })
@@ -118,8 +118,8 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                             <table className="table-auto border-2">
                                 <thead>
                                     <tr className="border-2">
-                                        <th className="border-2">Total Platos</th>
-                                        <th className="border-2">Total a Pagar</th>
+                                        <th className="border-2">{t("totalDishes")}</th>
+                                        <th className="border-2">{t("totalPrice")}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -139,7 +139,7 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                         <button
                             className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
                         >
-                            <FaThumbsDown /> Cancelar
+                            <FaThumbsDown /> {t("cancel")}
                         </button>
                         <button
                             // onClick={() => processTransaction(totalPrice, totalDishes, token, userId, undefined, selectedDishes, dishCounters, items)}
@@ -147,7 +147,7 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                             className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                             style={{ marginLeft: "2vw" }}
                         >
-                            <FaThumbsUp /> Procesar
+                            <FaThumbsUp /> {t("submit")}
                         </button>
                     </section>
                 </div>
@@ -193,7 +193,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 role: context.req.cookies.role ?? null,
                 userId: context.req.cookies.userId ?? null,
                 userName: context.req.cookies.userName ?? null,
-                token: context.req.cookies.token ?? null
+                token: context.req.cookies.token ?? null,
+                messages: {
+                    ...require(`../../../../messages/sell/${context.locale}.json`),
+                    ...require(`../../../../messages/navbar/${context.locale}.json`),
+                },
             }
         }
     } catch (error) {

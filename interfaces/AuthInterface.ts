@@ -16,6 +16,15 @@ export type Response = {
         _id: string
     }
 }
+export type User = {
+    balance: number,
+    canBorrow: boolean,
+    email: string,
+    name: string,
+    role: string,
+    tn: string,
+    _id: string
+}
 
 export type Login = {
     email: string,

@@ -1,0 +1,11 @@
+{
+    "index": {
+        "welcome": "Bienvenido al Comedor Buen Amanecer",
+        "slogan": "Sabor para alegrarte el dia",
+        "waiting": "Te esperamos para ofrecerte:",
+        "breakfast": "Desayunos",
+        "lunch": "Almuerzos",
+        "dinner": "Cenas",
+        "todayMenu": "El menu de hoy"
+    }
+}

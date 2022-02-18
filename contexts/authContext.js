@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { getLocalStorage, setLocalStorage } from './../hooks/useLocalStorage'
+import { getLocalStorage, setLocalStorage } from '../hooks/useLocalStorage'
 
 const AuthContext = createContext({})
 
@@ -10,7 +10,10 @@ export const AuthProvider = ({ children }) => {
         setLocalStorage("session", session);
         if (session) {
             if (Object.keys(session).length > 0) {
-                document.cookie = `userName=${session.user.name}; userId=${session.user._id}; token=${session.token}; role=${session.user.role}`
+                document.cookie = `userName=${session.user.name};`
+                document.cookie = `userId=${session.user._id};`
+                document.cookie = `token=${session.token};`
+                document.cookie = `role=${session.user.role}`
             }
         }
     }, [session]);

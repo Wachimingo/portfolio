@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { useEffect, memo } from 'react';
-const classes = require('../styles/modal.module.css')
-import { closeButton, closeXButton, formInput, formLabel, h3Title, modalBox, submitButton } from '../styles/modalsAndFormsInlineJS';
-import { modifyItem, addNewItem } from '../controllers/menuController';
+const classes = require('../../styles/modal.module.css')
+import { closeButton, closeXButton, formInput, formLabel, h3Title, modalBox, submitButton } from '../../styles/modalsAndFormsInlineJS';
+import { modifyItem, addNewItem } from '../../controllers/menuController';
 
 export const CatalogModal: any = memo((props: any) => {
     const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm();
@@ -45,7 +45,7 @@ export const CatalogModal: any = memo((props: any) => {
                                     ?
                                     handleSubmit((data) => modifyItem(data, props.item, props.image, props.token, props.setShowModal, props.setItem))
                                     :
-                                    handleSubmit((data) => addNewItem(data, props.image, props.token, props.setShowModal, props.setItem))}
+                                    handleSubmit((data) => addNewItem(data, props.image, props.token, props.setShowModal))}
                         >
                             {/**@Name input */}
                             <div className="mb-4">

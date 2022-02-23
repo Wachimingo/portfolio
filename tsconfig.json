@@ -24,11 +24,17 @@
     "**/*.ts",
     "**/*.tsx",
     "**/**/*.ts",
-    "**/**/*.tsx"
+    "**/**/*.tsx",
+    "components/checkouts/CheckoutForm.js",
+    "models/billModel.ts",
+    "pages/_app.js",
+    "components/localeSwitcher.js",
+    "pages/x.js",
+    "components/Toast.js"
   ],
   "exclude": [
     "node_modules",
-    "pages/_document.js",
+    "pages/x.js",
     "./next.config.js",
     "./context/*.js",
     "./components/clientSideComponents/*.js",

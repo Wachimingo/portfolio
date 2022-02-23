@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 export const submitReview = async (userId: string, itemId: string, review: string, stars: number, token: string, setShowModal: Function) => {
     const response = await fetch('/api/comedor/reviews', {
         method: 'POST',
@@ -13,7 +15,11 @@ export const submitReview = async (userId: string, itemId: string, review: strin
         })
     });
     const data = await response.json();
-    if (!response.ok) console.log(data)
+    if (response.ok) {
+        toast.info('Reseña guardada')
+    } else {
+        toast.error(data.error.message)
+    }
     setShowModal('hidden');
 }
 
@@ -32,6 +38,10 @@ export const modifyReview = async (userId: string, reviewId: string, review: str
         })
     });
     const data = await response.json();
-    if (!response.ok) console.log(data)
+    if (response.ok) {
+        toast.info('Reseña actualizada')
+    } else {
+        toast.error(data.error.message)
+    }
     setShowModal('hidden');
 }

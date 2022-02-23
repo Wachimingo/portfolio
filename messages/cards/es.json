@@ -1,0 +1,19 @@
+{
+    "OrderCard": {
+        "submitter": "Realizado por:",
+        "totalDishes": "Total de platillos",
+        "price": "Precio",
+        "date": "Fecha",
+        "state": "Estado",
+        "pending": "Pendiente",
+        "ready": "Lista para retirar",
+        "completed": "Completado",
+        "payed": "Pagado",
+        "paymentPending": "Pago pendiente"
+    },
+    "OrderControls": {
+        "ready": "Orden lista",
+        "cancel": "Cancelar orden",
+        "complete": "Completar"
+    }
+}

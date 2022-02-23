@@ -1,12 +1,24 @@
-import type { FC } from 'react';
+import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { useState, useContext, memo } from 'react';
 import AuthContext from '../contexts/authContext';
 import Link from 'next/link';
-import { FaBars } from 'react-icons/fa'
+import { FaBars } from 'react-icons/fa';
+import { LocaleSwitcher } from './LocaleSwitcher'
 
-export const MainNavbar: FC = memo(() => {
+const MainNavbar = () => {
     const { session }: any = useContext(AuthContext);
+    const t = useTranslations("navbar");
     const [navbarOpen, setNavbarOpen] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+    // Setting up useEffect to know when the component is mounted, so it can read the values from the session context
+    useEffect(() => {
+        if (!isMounted) {
+
+        }
+        setIsMounted(true)
+    }, []);
+    if (!isMounted) return <>{t("Loading")}</>
     return (
         <>
             <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-slate-800 mb-3 overflow-visible">
@@ -34,35 +46,12 @@ export const MainNavbar: FC = memo(() => {
                         }
                         id="navbar"
                     >
-                        <span onClick={() => {
-                            document.getElementById('dropdown')?.classList.toggle('hidden')
-                        }} className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>Comedor</span>
-
-                        <div className="hidden bg-white text-base z-50 list-none divide-y divide-gray-100 rounded shadow my-4 absolute" style={{ top: "3vh" }} id="dropdown">
-                            <ul className="py-1" aria-labelledby="dropdown">
-                                <li onClick={() => {
-                                    document.getElementById('dropdown')?.classList.toggle('hidden')
-                                }}>
-                                    <Link href='/comedor/menu/catalog' passHref>
-                                        <a className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Catalogo</a>
-                                    </Link>
-                                </li>
-                                <li onClick={() => {
-                                    document.getElementById('dropdown')?.classList.toggle('hidden')
-                                }}>
-                                    <Link href='/' passHref>
-                                        <a href="#" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Dashboard</a>
-                                    </Link>
-                                </li>
-                                <li onClick={() => {
-                                    document.getElementById('dropdown')?.classList.toggle('hidden')
-                                }}>
-                                    <Link href='/' passHref>
-                                        <a href="#" className="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Dashboard</a>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
+                        <Link href='/projects' passHref>
+                            <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{t("Projects")}</a>
+                        </Link>
+                        <Link href='/skills' passHref>
+                            <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{t("Skills")}</a>
+                        </Link>
                         <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
                             {
                                 !session
@@ -72,7 +61,7 @@ export const MainNavbar: FC = memo(() => {
                                             <a
                                                 className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                                             >
-                                                <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i><span className="ml-2">Registrarse</span>
+                                                <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i><span className="ml-2">{t("Sign up")}</span>
                                             </a>
                                         </Link>
                                     </li>
@@ -81,13 +70,17 @@ export const MainNavbar: FC = memo(() => {
                             }
                             <li className="nav-item">
                                 <Link href={!session ? '/auth/signin' : '/auth/signout'} passHref>
-                                    <a className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-7">{!session ? 'Ingresar' : 'Salir'}</a>
+                                    <a className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-7">{!session ? t('Sign in') : t('Sign out')}</a>
                                 </Link>
                             </li>
+                            <LocaleSwitcher />
                         </ul>
                     </div>
                 </div>
             </nav>
         </>
     );
-});
+
+}
+
+export default MainNavbar;

@@ -1,0 +1,7 @@
+{
+    "order": {
+        "pending": "Pending",
+        "ready": "Ready",
+        "completed": "Completed"
+    }
+}

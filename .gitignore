@@ -29,10 +29,12 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
-# next.config.js
+next.config.js
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
+
+.eslintrc.json

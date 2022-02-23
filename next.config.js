@@ -31,11 +31,12 @@ module.exports = {
             'mongodb+srv://tabs7:preespecialidad@wachimingo.aorej.mongodb.net/microempresa?retryWrites=true',
         // MONGODB_URI:
         //     'mongodb://127.0.0.1:27017/portfolio?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false',
-        // managementBackend: 'https://comedor-backend.herokuapp.com',
-        managementBackend: 'http://localhost:3001',
+        managementBackend: 'https://comedor-backend.herokuapp.com/',
+        // managementBackend: 'http://localhost:3001',
         // EMAIL_SERVER: 'smtp://09371a77bc9725:da68e33acb8eab@smtp.mailtrap.io:587',
+        SENDGRID_API_KEY: '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',
         EMAIL_SERVER:
-            'smtp://apikey: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@smtp.sendgrid.net:587',
+            'smtp://apikey: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@smtp.sendgrid.net:587',
         EMAIL_FROM: 'joshua.herrera2@outlook.com',
         // NEXTAUTH_URL: 'http://localhost:3000'  ,
         // VERCEL_URL: 'http://localhost:3000',

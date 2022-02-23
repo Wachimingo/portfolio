@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
 import Head from "next/head";
 
@@ -33,7 +33,7 @@ const Skills = ({ skills }: any) => {
 
 export default Skills;
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         const result = await fetch(`http://127.0.0.1:3000/api/skills?locale=${context.locale}`);
         const data = await result.json();

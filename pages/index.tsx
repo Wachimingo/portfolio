@@ -17,15 +17,10 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <button
-          onClick={
-            () => toast.error("test")
-          }
-          className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-          style={{ marginLeft: "2px" }}
-        >
-          test toast
-        </button>
+        <h1 className="text-2xl">Wachimingo</h1>
+        <br />
+        <p className="text-base">Greetings! My name is Joshua Herrera, I'm a fullstack developer based in El Salvador</p>
+        <p className="text-base">Feel free to check out the projecs I've worked on and the skills I have.</p>
       </main>
 
       <footer >

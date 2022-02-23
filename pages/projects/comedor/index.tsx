@@ -5,15 +5,18 @@ import { useTranslations } from "next-intl";
 import Carousel from "../../../components/Carousel";
 const classes = require('../../../styles/comedorIndex.module.css');
 
-const index = ({ items }: any) => {
+const index = ({ items, error }: any) => {
     const t = useTranslations("index");
+    if (error) {
+        return <>{error}</>
+    }
     return (
         <>
             <br />
             {/* Main section */}
             <section className={`text-center`}>
                 <div className="text-black text-xl text-bold bg-white w-72" style={{ marginLeft: "42vw" }}>
-                    <h1>{t("welcome")}</h1>
+                    <h1 className="text-2xl">{t("welcome")}</h1>
                 </div>
                 <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
                 <br />
@@ -29,7 +32,7 @@ const index = ({ items }: any) => {
             <br />
             <br />
             <section className={`text-center`}>
-                <h3>{t("waiting")}</h3>
+                <h3 className="text-xl">{t("waiting")}</h3>
                 <br />
                 <div>
                     <div className="inline-block">
@@ -95,7 +98,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
     } catch (error) {
         return {
-            notFound: true
+            props: {
+                error: 'No connection to Database',
+                messages: {
+                    ...require(`../../../messages/index/comedor/${context.locale}.json`),
+                    ...require(`../../../messages/navbar/${context.locale}.json`),
+                    // ...require(`../../../messages/cards/${context.locale}.json`),
+                },
+                customClass: classes.backgroundImage1
+            }
         }
     }
 

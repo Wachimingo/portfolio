@@ -21,7 +21,8 @@ const Projects = ({ items }: ProjectsProps) => {
     const t = useTranslations("index");
     return (
         <>
-            <h1>{t("title")}</h1>
+            <h1 className="text-2xl">{t("title")}</h1>
+            <br />
             <section className="card inline-block mx-2">
                 {
                     items.map((item: any, i: number) => {

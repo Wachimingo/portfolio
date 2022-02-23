@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }) {
       // import('react-toastify/dist/ReactToastify.min.css');
     }
     setIsMounted(true);
-  }, [])
+  }, [pageProps])
   return (
     <>
       <NextIntlProvider

@@ -64,8 +64,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 props: {
                     items: data,
                     messages: {
-                        ...require(`../../messages/index/${context.locale}.json`),
-                        ...require(`../../messages/navbar/${context.locale}.json`),
+                        ...require(`../../public/static/messages/index/${context.locale}.json`),
+                        ...require(`../../public/static/messages/navbar/${context.locale}.json`),
                     },
                 }
             }

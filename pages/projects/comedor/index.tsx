@@ -88,9 +88,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 items: items.data,
+                error: null,
                 messages: {
-                    ...require(`../../../messages/index/comedor/${context.locale}.json`),
-                    ...require(`../../../messages/navbar/${context.locale}.json`),
+                    ...require(`../../../public/static/messages/index/comedor/${context.locale}.json`),
+                    ...require(`../../../public/static/messages/navbar/${context.locale}.json`),
                     // ...require(`../../../messages/cards/${context.locale}.json`),
                 },
                 customClass: classes.backgroundImage1
@@ -99,13 +100,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } catch (error) {
         return {
             props: {
-                error: 'No connection to Database',
-                messages: {
-                    ...require(`../../../messages/index/comedor/${context.locale}.json`),
-                    ...require(`../../../messages/navbar/${context.locale}.json`),
-                    // ...require(`../../../messages/cards/${context.locale}.json`),
-                },
-                customClass: classes.backgroundImage1
+                // items: null,
+                // error: 'No connection to Database',
+                // messages: {
+                //     ...require(`../../../public/static/messages/index/comedor/${context.locale}.json`),
+                //     ...require(`../../../public/static/messages/navbar/${context.locale}.json`),
+                //     // ...require(`../../../messages/cards/${context.locale}.json`),
+                // },
+                // customClass: classes.backgroundImage1
             }
         }
     }

@@ -106,12 +106,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         let error = [];
         // ${context.query.id}
-        const res1 = await fetch(`http://localhost:3000/api/comedor/dish?type=one&id=${context.query.id}`, {
+        const res1 = await fetch(`http://127.0.0.1:3000/api/comedor/dish?type=one&id=${context.query.id}`, {
             method: 'GET',
         });
         const item = await res1.json();
         // ${context.query.id}
-        const res2 = await fetch(`http://localhost:3000/api/comedor/reviews?type=one&userId=${context.req.cookies.userId}&dishId=${context.query.id}`, {
+        const res2 = await fetch(`http://127.0.0.1:3000/api/comedor/reviews?type=one&userId=${context.req.cookies.userId}&dishId=${context.query.id}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${context.req.cookies.token}`

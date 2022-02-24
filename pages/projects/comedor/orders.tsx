@@ -85,9 +85,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 role: context.req.cookies.role ?? null,
                 token: context.req.cookies.token ?? null,
                 messages: {
-                    ...require(`../../../messages/orders/${context.locale}.json`),
-                    ...require(`../../../messages/navbar/${context.locale}.json`),
-                    ...require(`../../../messages/cards/${context.locale}.json`),
+                    ...require(`../../../public/static/messages/orders/${context.locale}.json`),
+                    ...require(`../../../public/static/messages/navbar/${context.locale}.json`),
+                    ...require(`../../../public/static/messages/cards/${context.locale}.json`),
                 },
             }
         }

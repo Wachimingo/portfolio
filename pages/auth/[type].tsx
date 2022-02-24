@@ -1,5 +1,5 @@
 import type { GetServerSideProps } from 'next';
-import { useContext, useEffect } from 'react';
+import { memo, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import Head from 'next/head';
@@ -9,7 +9,7 @@ import { FaFacebook } from 'react-icons/fa'
 import { AuthProps } from '../../interfaces/AuthInterface';
 import { signin, signup } from '../../controllers/authController';
 
-const Auth = ({ type, providers }: AuthProps) => {
+const Auth = memo(({ type }: AuthProps) => {
   const router = useRouter();
   const { setSession, quitSession }: any = useContext(AuthContext);
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -45,9 +45,10 @@ const Auth = ({ type, providers }: AuthProps) => {
         <title>{type}</title>
         <meta name="Auth" content={`${type}`} />
       </Head>
-      <h1 className="xl:ml-m2vw">{type}</h1>
-      <section className="">
-        <div className='xl:w-3/6 xl:ml-96 sm:ml-1'>
+
+      <section className="inline-block">
+        <h1 className="">{type}</h1>
+        <div style={{ width: "25vw" }}>
           <form
             className='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800'
             onSubmit={
@@ -102,26 +103,32 @@ const Auth = ({ type, providers }: AuthProps) => {
         </div>
       </section>
       {/* Other signin or signup options */}
-      <section className='xl:ml-m2vw'>
+      <section className='inline'>
         <h3>O ingresar con:</h3>
-        <button className='btn btn-primary btn-lg btn-block' onClick={() => signIn(providers.facebook.id)}>
+        <button className='btn btn-primary btn-lg btn-block' onClick={() => signIn('facebook')}>
           <FaFacebook />
         </button>
       </section>
     </>
   )
-}
+})
 
 export default Auth;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const type = context.query.type;
-    const providers = await getProviders();
+    // const providers = await getProviders();
     // console.log(type)
 
     return {
-      props: { type, providers },
+      props: {
+        type,
+        messages: {
+          // ...require(`../../../public/static/messages/orders/${context.locale}.json`),
+          ...require(`../../public/static/messages/navbar/${context.locale}.json`),
+        },
+      },
     }
   } catch (err) {
 

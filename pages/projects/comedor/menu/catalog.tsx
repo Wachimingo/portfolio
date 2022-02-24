@@ -103,17 +103,17 @@ catalog.Layout = projectLayout;
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         let error = [];
-        const res1 = await fetch(`http://localhost:3000/api/comedor/dish?type=all`, {
+        const res1 = await fetch(`http://127.0.0.1:3000/api/comedor/dish?type=all`, {
             method: 'GET',
         })
         const items = await res1.json();
-        const res3 = await fetch(`http://localhost:3000/api/comedor/categories`, {
+        const res3 = await fetch(`http://127.0.0.1:3000/api/comedor/categories`, {
             method: 'GET',
         })
         const categories = await res3.json();
         let res2 = undefined
         if (context.req.cookies !== undefined) {
-            res2 = await fetch(`http://localhost:3000/api/comedor/favoriteDish?userId=${context.req.cookies?.userId}`, {
+            res2 = await fetch(`http://127.0.0.1:3000/api/comedor/favoriteDish?userId=${context.req.cookies?.userId}`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${context.req.cookies.token}`
@@ -140,8 +140,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 token: context.req.cookies.token ?? null,
                 userId: context.req.cookies.userId ?? null,
                 messages: {
-                    ...require(`../../../../messages/catalog/${context.locale}.json`),
-                    ...require(`../../../../messages/navbar/${context.locale}.json`),
+                    ...require(`../../../../public/static/messages/catalog/${context.locale}.json`),
+                    ...require(`../../../../public/static/messages/navbar/${context.locale}.json`),
                 },
                 error,
             }

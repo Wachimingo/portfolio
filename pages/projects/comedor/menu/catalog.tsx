@@ -1,5 +1,4 @@
 import type { GetServerSideProps } from 'next';
-import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic'
 import Head from 'next/head';
 const classes = require('./../../../../styles/catalog.module.css');
@@ -10,6 +9,7 @@ import { Dish, Favs, Categories } from '../../../../interfaces/DishInterface';
 import { imageHandler } from '../../../../controllers/imgController';
 import { toast } from 'react-toastify';
 import projectLayout from '../../../../layouts/projectLayout';
+import { useRouter } from 'next/router';
 
 const CatalogModal = dynamic<any>(() => import('../../../../components/modals/CatalogModal').then((mod) => mod.CatalogModal));
 
@@ -23,12 +23,12 @@ interface propsType {
 }
 
 const catalog = ({ items, favs, categories, token, userId, error }: propsType) => {
+    const router = useRouter();
     const [image, setImage] = useState<any>(''); // Use for saving image files as base64 in dabase
     const { session }: any = useContext(AuthContext);
     const [item, setItem] = useState<Dish>(undefined); // Use for modify/update existing item
     const [showModal, setShowModal] = useState('hidden'); // 'hidden' to have the modal closed and '' to open it
-    const [isMounted, setIsMounted] = useState(false);
-    const t = useTranslations("catalog");
+    const [isMounted, setIsMounted] = useState(false); // Use for avoiding the modal to open when the component is not mounted
     useEffect(() => {
         if (!isMounted) {
             for (let index = 0; index < error.length; index++) {
@@ -38,16 +38,16 @@ const catalog = ({ items, favs, categories, token, userId, error }: propsType) =
         setIsMounted(true)
     }, [])
 
-    if (!items) return <>{t("error")}</>
+    if (!items) return <>Error</>
     return (
         <>
             <Head>
-                <title>{t("title")}</title>
-                <meta name={t("catalog")} content={t("content")} />
+                <title>{router.locale === 'en' ? 'Catalog' : 'Catalogo'}</title>
+                <meta name={router.locale === 'en' ? 'Catalog' : 'Catalogo'} content={router.locale === 'en' ? 'Catalog' : 'Catalogo'} />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={showModal === '' ? 'pointer-events-none' : ''}>
-                <h1>{t("title")}</h1>
+                <h1>{router.locale === 'en' ? 'Catalog' : 'Catalogo'}</h1>
                 <button type="button" className={`bg-cyan-500 text-white ${classes.addButton}`} onClick={() => setShowModal('')}>+</button>
                 {/* Display items section */}
                 <section>
@@ -139,10 +139,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 categories: categories.records,
                 token: context.req.cookies.token ?? null,
                 userId: context.req.cookies.userId ?? null,
-                messages: {
-                    ...require(`../../../../public/static/messages/catalog/${context.locale}.json`),
-                    ...require(`../../../../public/static/messages/navbar/${context.locale}.json`),
-                },
                 error,
             }
         }

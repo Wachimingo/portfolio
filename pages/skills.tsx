@@ -1,17 +1,15 @@
 import { GetServerSideProps } from "next";
-import { useTranslations } from "next-intl";
 import Head from "next/head";
 
-const Skills = ({ skills }: any) => {
-    const t = useTranslations('skills');
+const Skills = ({ skills, content }: any) => {
     return (
         <>
             <Head>
-                <title>{t("title")}</title>
-                <meta name={t("title")} content={t("content")} />
+                <title>{content.title}</title>
+                <meta name={content.title} content={content.content} />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <h1 className="text-2xl">{t('description')}</h1>
+            <h1 className="text-2xl">{content.description}</h1>
             <br />
             <section className="mt-8">
                 {
@@ -37,13 +35,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         const result = await fetch(`http://127.0.0.1:3000/api/skills?locale=${context.locale}`);
         const data = await result.json();
+        const localeResult = await fetch(`http://127.0.0.1:3000/api/locale?locale=${context.locale}&pageName=skills`);
+        const locale = await localeResult.json();
         return {
             props: {
                 skills: data,
-                messages: {
-                    ...require(`../public/static/messages/skills/${context.locale}.json`),
-                    ...require(`../public/static/messages/navbar/${context.locale}.json`),
-                },
+                content: locale[0].content
             }
         }
     } catch (err) {

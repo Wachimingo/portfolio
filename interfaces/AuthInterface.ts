@@ -1,6 +1,7 @@
 export interface AuthProps {
     type: string,
     // providers: any,
+    content: any
 }
 
 export type Response = {

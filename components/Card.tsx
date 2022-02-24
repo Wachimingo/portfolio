@@ -104,11 +104,11 @@ export const ControlButtons = ({ token, item, favs, setItem, setShowModal, _id }
 type OrderCardProps = {
     order: Order,
     role: string,
-    token: string
+    token: string,
+    locale?: string,
 }
 
-export const OrderCard = ({ order, role, token }: OrderCardProps) => {
-    const t = useTranslations("OrderCard")
+export const OrderCard = ({ order, role, token, locale }: OrderCardProps) => {
     return (
         <div className="max-w-sm rounded overflow-hidden shadow-lg card inline-block mx-2" style={{ width: "25vw" }} key={'order' + order._id}>
             <div className="px-6 py-4">
@@ -117,44 +117,44 @@ export const OrderCard = ({ order, role, token }: OrderCardProps) => {
                         ?
                         <div className="font-bold text-xl mb-2" >
                             <h5>
-                                {t("submitter")} {order.user.name}
+                                {locale === 'en' ? 'Submitter:' : 'Pedido por:'} {order.user.name}
                             </h5>
                         </div>
                         : undefined
                 }
 
                 <p className="text-gray-700 text-base text-sm" >
-                    {t("totalDishes")} {order.totalDishes}
+                    {locale === 'en' ? 'Total dishes' : 'Total de platos'}: {order.totalDishes}
                 </p>
                 <p className="text-gray-700 text-base" >
-                    {t("price")}: ${order.totalPrice}
+                    {locale === 'en' ? 'Payment' : 'Total a pagar'}: ${order.totalPrice}
                 </p>
                 <p className="text-gray-700 text-base" >
-                    {t("date")}: {order.createdAt}
+                    {locale === 'en' ? 'Date' : 'Fecha'}: {order.createdAt}
                 </p>
                 {
                     order.status === 'isPending'
                         ?
                         <p className="text-red-700 text-base" >
-                            <span className="text-gray-700">{t("state")}:</span> {t("pending")}
+                            <span className="text-gray-700">{locale === 'en' ? 'Status' : 'Estado'}:</span> {locale === 'en' ? 'Pending' : 'Pendiente'}
                         </p> : undefined
                 }
                 {
                     order.status === 'isReady'
                         ?
                         <p className="text-green-700 text-base" >
-                            <span className="text-gray-700">{t("state")}:</span> {t("ready")}
+                            <span className="text-gray-700">{locale === 'en' ? 'Status' : 'Estado'}:</span> {locale === 'en' ? 'Ready' : 'Lista'}
                         </p> : undefined
                 }
                 {
                     order.status === 'completed'
                         ?
                         <p className="text-black text-base" >
-                            <span className="text-gray-700">{t("state")}:</span> {t("completed")}
+                            <span className="text-gray-700">{locale === 'en' ? 'Status' : 'Estado'}:</span> {locale === 'en' ? 'Completed' : 'Completado'}
                         </p> : undefined
                 }
                 <p className={`text-base ${order.isPaid ? 'text-green-700' : 'text-red-700'}`} >
-                    {order.isPaid ? t("payed") : t("paymentPending")}
+                    {order.isPaid ? locale === 'en' ? 'Payed' : 'Pagado' : locale === 'en' ? 'Payment pending' : 'Pago pendiente'}
                 </p>
             </div>
             <ul className="text-left">
@@ -167,14 +167,13 @@ export const OrderCard = ({ order, role, token }: OrderCardProps) => {
                 }
             </ul>
             <br />
-            <OrderControls role={role} token={token} orderId={order._id} currentStatus={order.status} />
+            <OrderControls role={role} token={token} orderId={order._id} currentStatus={order.status} locale={locale} />
             <br />
         </div>
     )
 }
 
-export const OrderControls = ({ role, token, orderId, currentStatus }: any) => {
-    const t = useTranslations("OrderControls")
+export const OrderControls = ({ role, token, orderId, currentStatus, locale }: any) => {
     return (
         <div>
             {
@@ -186,7 +185,7 @@ export const OrderControls = ({ role, token, orderId, currentStatus }: any) => {
                             onClick={() => currentStatus === "isPending" ? updateStatus(token, orderId, 'isReady') : updateStatus(token, orderId, 'completed')}
                             className="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded"
                         >
-                            {currentStatus === "isPending" ? t("ready") : t("complete")}
+                            {currentStatus === "isPending" ? locale === 'en' ? 'Set Ready' : 'Lista' : locale === 'en' ? 'Complete' : 'Copmletar'}
                         </button> : undefined
             }
 
@@ -195,7 +194,7 @@ export const OrderControls = ({ role, token, orderId, currentStatus }: any) => {
                 className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
                 style={{ marginLeft: "2vw" }}
             >
-                {t("cancel")}
+                {locale === 'en' ? 'Cancel' : 'Cancelar'}
             </button>
         </div>
     )

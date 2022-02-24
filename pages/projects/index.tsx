@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
-import { useTranslations } from "next-intl";
 import Link from 'next/link';
+import { useRouter } from "next/router";
 
 
 type Project = {
@@ -18,12 +18,12 @@ type ProjectsProps = {
 }
 
 const Projects = ({ items }: ProjectsProps) => {
-    const t = useTranslations("index");
+    const router = useRouter();
     return (
         <>
-            <h1 className="text-2xl">{t("title")}</h1>
+            <h1 className="text-2xl">{router.locale === 'en' ? 'Projects' : 'Proyectos'}</h1>
             <br />
-            <section className="card inline-block mx-2">
+            <section className="inline-block mx-2">
                 {
                     items.map((item: any, i: number) => {
                         return (
@@ -63,10 +63,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             return {
                 props: {
                     items: data,
-                    messages: {
-                        ...require(`../../public/static/messages/index/${context.locale}.json`),
-                        ...require(`../../public/static/messages/navbar/${context.locale}.json`),
-                    },
                 }
             }
         } else {

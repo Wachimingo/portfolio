@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { useState, useContext, memo } from 'react';
 import AuthContext from '../contexts/authContext';
 import Link from 'next/link';
 import { FaBars } from 'react-icons/fa';
 import { LocaleSwitcher } from './LocaleSwitcher'
+import { useRouter } from 'next/router';
 
 const MainNavbar = () => {
     const { session }: any = useContext(AuthContext);
-    const t = useTranslations("navbar");
+    const router = useRouter();
     const [navbarOpen, setNavbarOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     // Setting up useEffect to know when the component is mounted, so it can read the values from the session context
@@ -18,7 +18,7 @@ const MainNavbar = () => {
         }
         setIsMounted(true)
     }, []);
-    if (!isMounted) return <>{t("Loading")}</>
+    if (!isMounted) return <>{router.locale === 'en' ? 'Loading' : 'Cargando'}</>
     return (
         <>
             <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-slate-800 mb-3 overflow-visible">
@@ -47,10 +47,10 @@ const MainNavbar = () => {
                         id="navbar"
                     >
                         <Link href='/projects' passHref>
-                            <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{t("Projects")}</a>
+                            <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{router.locale === 'en' ? 'Projects' : 'Proyectos'}</a>
                         </Link>
                         <Link href='/skills' passHref>
-                            <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{t("Skills")}</a>
+                            <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{router.locale === 'en' ? 'Skills' : 'Habilidades'}</a>
                         </Link>
                         <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
                             {
@@ -61,7 +61,7 @@ const MainNavbar = () => {
                                             <a
                                                 className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                                             >
-                                                <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i><span className="ml-2">{t("Sign up")}</span>
+                                                <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i><span className="ml-2">{router.locale === 'en' ? 'Sign up' : 'Registrarse'}</span>
                                             </a>
                                         </Link>
                                     </li>
@@ -70,7 +70,7 @@ const MainNavbar = () => {
                             }
                             <li className="nav-item">
                                 <Link href={!session ? '/auth/signin' : '/auth/signout'} passHref>
-                                    <a className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-7">{!session ? t('Sign in') : t('Sign out')}</a>
+                                    <a className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-7">{!session ? router.locale === 'en' ? 'Sign In' : 'Ingresar' : router.locale === 'en' ? 'Sign Out' : 'Salir'}</a>
                                 </Link>
                             </li>
                             <LocaleSwitcher />

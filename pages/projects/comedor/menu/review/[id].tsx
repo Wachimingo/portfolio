@@ -46,7 +46,7 @@ const review = ({ item, review, userId, token, error }: ReviewProps) => {
                 <meta name={item?.name} content={`Descripcion y review de ${item?.name}`} />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Link href={'/comedor/menu/catalog'} passHref>
+            <Link href={'/projects/comedor/menu/catalog'} passHref>
                 <a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Volver al catalogo</a>
             </Link>
             <br />

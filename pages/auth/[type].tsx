@@ -4,12 +4,12 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import Head from 'next/head';
 import AuthContext from './../../contexts/authContext';
-import { getProviders, signIn } from "next-auth/react"
+import { signIn } from "next-auth/react"
 import { FaFacebook } from 'react-icons/fa'
 import { AuthProps } from '../../interfaces/AuthInterface';
 import { signin, signup } from '../../controllers/authController';
 
-const Auth = memo(({ type }: AuthProps) => {
+const Auth = memo(({ type, content }: AuthProps) => {
   const router = useRouter();
   const { setSession, quitSession }: any = useContext(AuthContext);
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -62,7 +62,7 @@ const Auth = memo(({ type }: AuthProps) => {
               type === 'signup' ?
                 <div className="mb-4">
                   <input {...register("name", { required: true, pattern: /^[a-zA-Z ]+$/ })} type="text" id="name" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
-                  <label className="block text-white text-sm font-bold mb-2" htmlFor="name">Nombre</label>
+                  <label className="block text-white text-sm font-bold mb-2" htmlFor="name">{content.name}</label>
                 </div>
                 : undefined
             }
@@ -70,17 +70,17 @@ const Auth = memo(({ type }: AuthProps) => {
             {/**@Email input */}
             <div className="mb-4">
               <input {...register("email", { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })} type="email" id="username" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
-              <label className="block text-white text-sm font-bold mb-2" htmlFor="username">Correo electronico</label>
+              <label className="block text-white text-sm font-bold mb-2" htmlFor="username">{content.email}</label>
             </div>
-            {errors.email && <p className="block text-red-500 text-sm font-bold mb-2">El correo electronico es requerido</p>}
+            {errors.email && <p className="block text-red-500 text-sm font-bold mb-2">{content.emailWarning}</p>}
 
             {/**@Password input */}
 
             <div className="mb-4">
               <input {...register("password", { required: true })} type="password" id="password" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
-              <label className="block text-white text-sm font-bold mb-2" htmlFor="password">Contraseña</label>
+              <label className="block text-white text-sm font-bold mb-2" htmlFor="password">{content.password}</label>
             </div>
-            {errors.password && <p className="block text-red-500 text-sm font-bold mb-2">La contraseña es requerida</p>}
+            {errors.password && <p className="block text-red-500 text-sm font-bold mb-2">{content.passwordWarning}</p>}
 
             {/**@PasswordConfirm is only render when the auth type is signup, and it is only use to validate that password is correct*/}
             {
@@ -91,11 +91,11 @@ const Auth = memo(({ type }: AuthProps) => {
                       matchPassword: () => watch("password") === watch("passwordConfirm")
                     }
                   })} type="password" id="passwordConfirm" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
-                  <label className="block text-white text-sm font-bold mb-2" htmlFor="passwordConfirm">Repetir contraseña</label>
+                  <label className="block text-white text-sm font-bold mb-2" htmlFor="passwordConfirm">{content.passwordConfirm}</label>
                 </div>
                 : undefined
             }
-            {errors.passwordConfirm && <p className="block text-red-500 text-sm font-bold mb-2">Las contraseñas no coinciden</p>}
+            {errors.passwordConfirm && <p className="block text-red-500 text-sm font-bold mb-2">{content.passwordConfirmWarning}</p>}
 
             {/**@Submit button */}
             <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{type === 'signin' ? 'Ingresar' : 'Registrarse'}</button>
@@ -104,7 +104,7 @@ const Auth = memo(({ type }: AuthProps) => {
       </section>
       {/* Other signin or signup options */}
       <section className='inline'>
-        <h3>O ingresar con:</h3>
+        <h3>{content.loginOptions}</h3>
         <button className='btn btn-primary btn-lg btn-block' onClick={() => signIn('facebook')}>
           <FaFacebook />
         </button>
@@ -120,14 +120,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const type = context.query.type;
     // const providers = await getProviders();
     // console.log(type)
-
+    const result = await fetch(`http://127.0.0.1:3000/api/locale?locale=${context.locale}&pageName=auth`);
+    const locale = await result.json();
     return {
       props: {
         type,
-        messages: {
-          // ...require(`../../../public/static/messages/orders/${context.locale}.json`),
-          ...require(`../../public/static/messages/navbar/${context.locale}.json`),
-        },
+        content: locale[0].content
       },
     }
   } catch (err) {

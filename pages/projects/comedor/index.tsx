@@ -1,12 +1,10 @@
 import { GetServerSideProps } from "next";
 import projectLayout from "../../../layouts/projectLayout";
 import Image from 'next/image'
-import { useTranslations } from "next-intl";
 import Carousel from "../../../components/Carousel";
 const classes = require('../../../styles/comedorIndex.module.css');
 
-const index = ({ items, error }: any) => {
-    const t = useTranslations("index");
+const index = ({ items, content, error }: any) => {
     if (error) {
         return <>{error}</>
     }
@@ -16,13 +14,13 @@ const index = ({ items, error }: any) => {
             {/* Main section */}
             <section className={`text-center`}>
                 <div className="text-black text-xl text-bold bg-white w-72" style={{ marginLeft: "42vw" }}>
-                    <h1 className="text-2xl">{t("welcome")}</h1>
+                    <h1 className="text-2xl">{content.title}</h1>
                 </div>
                 <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
                 <br />
-                <h2>{t("slogan")}</h2>
+                <h2>{content.slogan}</h2>
                 <br />
-                <p>{t("todayMenu")}</p>
+                <p>{content.todaysMenu}</p>
                 <Carousel items={items} />
                 {/* <Link href="/menu/sell" passHref>
           <a className="btn btn-success" style={{ width: "25vw" }}>Comprar</a>
@@ -32,11 +30,11 @@ const index = ({ items, error }: any) => {
             <br />
             <br />
             <section className={`text-center`}>
-                <h3 className="text-xl">{t("waiting")}</h3>
+                <h3 className="text-xl">{content.waiting}</h3>
                 <br />
                 <div>
                     <div className="inline-block">
-                        <h4>{t("breakfast")}</h4>
+                        <h4>{content.breakfast}</h4>
                         <Image
                             src='/assets/breakfast.jpg'
                             alt="breakfast"
@@ -45,7 +43,7 @@ const index = ({ items, error }: any) => {
                         />
                     </div>
                     <div className="inline-block ml-24">
-                        <h4>{t("lunch")}</h4>
+                        <h4>{content.lunch}</h4>
                         <Image
                             src='/assets/lunch.jpg'
                             alt="breakfast"
@@ -54,7 +52,7 @@ const index = ({ items, error }: any) => {
                         />
                     </div>
                     <div className="inline-block ml-24">
-                        <h4>{t("dinner")}</h4>
+                        <h4>{content.dinner}</h4>
                         <Image
                             src='/assets/dinner.jpg'
                             alt="breakfast"
@@ -84,30 +82,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         });
 
         const items = await res.json() ?? [];
-        // console.log("TCL: getServerSideProps:GetServerSideProps -> items", items)
+
+        const result = await fetch(`http://127.0.0.1:3000/api/locale?locale=${context.locale}&pageName=comedorIndex`);
+        const locale = await result.json();
         return {
             props: {
                 items: items.data,
+                content: locale[0].content,
                 error: null,
-                messages: {
-                    ...require(`../../../public/static/messages/index/comedor/${context.locale}.json`),
-                    ...require(`../../../public/static/messages/navbar/${context.locale}.json`),
-                    // ...require(`../../../messages/cards/${context.locale}.json`),
-                },
                 customClass: classes.backgroundImage1
             }
         }
     } catch (error) {
         return {
             props: {
-                // items: null,
-                // error: 'No connection to Database',
-                // messages: {
-                //     ...require(`../../../public/static/messages/index/comedor/${context.locale}.json`),
-                //     ...require(`../../../public/static/messages/navbar/${context.locale}.json`),
-                //     // ...require(`../../../messages/cards/${context.locale}.json`),
-                // },
-                // customClass: classes.backgroundImage1
+                items: null,
+                content: null,
+                error: 'No connection to Database',
+                customClass: classes.backgroundImage1
             }
         }
     }

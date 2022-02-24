@@ -1,12 +1,12 @@
 import { GetServerSideProps } from "next";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { OrderCard } from "../../../components/Card";
 import projectLayout from "../../../layouts/projectLayout"
 
 const orders = ({ orders, role, token }: any) => {
-    const t = useTranslations("order")
+    const router = useRouter();
     return (
         <>
             <br />
@@ -16,7 +16,7 @@ const orders = ({ orders, role, token }: any) => {
                     className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                     style={{ marginLeft: "2vw" }}
                 >
-                    {t("pending")}
+                    {router.locale === 'en' ? 'Pending' : 'Pendiente'}
                 </a>
             </Link>
             <Link href={'/projects/comedor/orders?status=isReady'} passHref>
@@ -25,7 +25,7 @@ const orders = ({ orders, role, token }: any) => {
                     className="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded"
                     style={{ marginLeft: "2vw" }}
                 >
-                    {t("ready")}
+                    {router.locale === 'en' ? 'Ready' : 'Lista'}
                 </a>
             </Link>
             <Link href={'/projects/comedor/orders?status=completed'} passHref>
@@ -34,7 +34,7 @@ const orders = ({ orders, role, token }: any) => {
                     className="bg-transparent hover:bg-gray-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
                     style={{ marginLeft: "2vw" }}
                 >
-                    {t("completed")}
+                    {router.locale === 'en' ? 'Completed' : 'Completado'}
                 </a>
             </Link>
             <br />
@@ -43,7 +43,7 @@ const orders = ({ orders, role, token }: any) => {
                 orders.map((order: any, i: number) => {
                     return (
                         <div key={'order' + i}>
-                            <OrderCard order={order} role={role} token={token} />
+                            <OrderCard order={order} role={role} token={token} locale={router.locale} />
                         </div>
                     )
                 })
@@ -84,11 +84,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 orders: orders.records ?? [],
                 role: context.req.cookies.role ?? null,
                 token: context.req.cookies.token ?? null,
-                messages: {
-                    ...require(`../../../public/static/messages/orders/${context.locale}.json`),
-                    ...require(`../../../public/static/messages/navbar/${context.locale}.json`),
-                    ...require(`../../../public/static/messages/cards/${context.locale}.json`),
-                },
             }
         }
     } catch (error) {

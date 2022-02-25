@@ -3,19 +3,19 @@ const withPreact = require('next-plugin-preact');
 /* eslint-disable prettier/prettier */
 /** @type {import('next').NextConfig} */
 module.exports = withPreact({
-    runtime: 'nodejs',
-    compress: true,
-    swcMinify: true,
+    // runtime: 'nodejs',
+    // compress: true,
+    // swcMinify: true,
     reactStrictMode: true,
     i18n: {
         locales: ["en", "es"],
         defaultLocale: "en",
     },
-    experimental: {
-        outputStandalone: true,
-        // concurrentFeatures: true,
-        // serverComponents: true,
-    },
+    // experimental: {
+    //     outputStandalone: true,
+    //     // concurrentFeatures: true,
+    //     // serverComponents: true,
+    // },
     env: {
         HTTPS: true,
         JWT_EXPIRES_IN: '90d',

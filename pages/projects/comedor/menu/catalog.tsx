@@ -103,20 +103,20 @@ catalog.Layout = projectLayout;
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         let error = [];
-        const res1 = await fetch(`http://127.0.0.1:3000/api/comedor/dish?type=all`, {
+        const res1 = await fetch(`${process.env.managementBackend}/api/v1/menu?limit=1000`, {
             method: 'GET',
         })
         const items = await res1.json();
-        const res3 = await fetch(`http://127.0.0.1:3000/api/comedor/categories`, {
+        const res3 = await fetch(`${process.env.managementBackend}/api/v1/categories/`, {
             method: 'GET',
         })
         const categories = await res3.json();
         let res2 = undefined
         if (context.req.cookies !== undefined) {
-            res2 = await fetch(`http://127.0.0.1:3000/api/comedor/favoriteDish?userId=${context.req.cookies?.userId}`, {
+            res2 = await fetch(`${process.env.managementBackend}/api/v1/fav/${context.req.cookies.userId}`, {
                 method: 'GET',
                 headers: {
-                    Authorization: `Bearer ${context.req.cookies.token}`
+                    Authorization: `Bearer ${context.req.cookies.token}` ?? 'No token provided'
                 }
             })
         }

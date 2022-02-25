@@ -51,23 +51,15 @@ const Projects = ({ items }: ProjectsProps) => {
 
 export default Projects;
 
+import "../../utils/dbConnection";
+import ProjectModel from "../../models/projectModel";
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
-        const result = await fetch(`http://127.0.0.1:3000/api/projects?locale=${context.locale}`, {
-            method: 'GET'
-        });
-
-        const data = await result.json();
-
-        if (result.ok) {
-            return {
-                props: {
-                    items: data,
-                }
-            }
-        } else {
-            return {
-                notFound: true
+        const data = await ProjectModel.find({}).where('locale').equals(context.locale).select('-__v');
+        return {
+            props: {
+                items: JSON.parse(JSON.stringify(data))
             }
         }
     } catch (error) {

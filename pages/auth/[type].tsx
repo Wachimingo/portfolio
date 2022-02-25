@@ -115,13 +115,15 @@ const Auth = memo(({ type, content }: AuthProps) => {
 
 export default Auth;
 
+import "../../utils/dbConnection";
+import Locale from "../../models/localeModel";
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const type = context.query.type;
     // const providers = await getProviders();
     // console.log(type)
-    const result = await fetch(`http://127.0.0.1:3000/api/locale?locale=${context.locale}&pageName=auth`);
-    const locale = await result.json();
+    const locale = await Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('auth').select('-__v');
     return {
       props: {
         type,

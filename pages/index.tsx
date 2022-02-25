@@ -29,11 +29,12 @@ const Home = ({ content }: any) => {
 
 export default Home;
 
+import "../utils/dbConnection";
+import Locale from "../models/localeModel";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const result = await fetch(`http://127.0.0.1:3000/api/locale?locale=${context.locale}&pageName=mainIndex`);
-    const locale = await result.json();
+    const locale = await Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('mainIndex').select('-__v');
     return {
       props: {
         content: locale[0].content

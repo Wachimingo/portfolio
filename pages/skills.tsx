@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 
-const Skills = ({ skills, content }: any) => {
+const skills = ({ skills, content }: any) => {
     return (
         <>
             <Head>
@@ -29,17 +29,18 @@ const Skills = ({ skills, content }: any) => {
     )
 }
 
-export default Skills;
+export default skills;
 
+import "../utils/dbConnection";
+import Locale from "../models/localeModel";
+import SkillsModel from "../models/skillsModel";
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
-        const result = await fetch(`http://127.0.0.1:3000/api/skills?locale=${context.locale}`);
-        const data = await result.json();
-        const localeResult = await fetch(`http://127.0.0.1:3000/api/locale?locale=${context.locale}&pageName=skills`);
-        const locale = await localeResult.json();
+        const locale = await Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('skills').select('-__v');
+        const data = await SkillsModel.find({}).where('locale').equals(context.locale).select('-__v -locale');
         return {
             props: {
-                skills: data,
+                skills: JSON.parse(JSON.stringify(data)),
                 content: locale[0].content
             }
         }

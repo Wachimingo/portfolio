@@ -8,7 +8,6 @@ const localeHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 //where locale and pageName = req.query
                 const data = await Locale.find({}).where('locale').equals(req.query.locale).where('pageName').equals(req.query.pageName).select('-__v');
-                console.log("TCL: localeHandler -> data", data)
                 return res.status(200).json(data)
             } catch (error) {
                 return res.status(500).json(error)

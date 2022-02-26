@@ -2,7 +2,6 @@ import { FaAngleUp, FaTrash, FaCog, FaRegFolderOpen, FaStar } from "react-icons/
 import { deleteItem, changeStateOfItem, updateItem, setAsFavorite, removeFavorite } from '../controllers/menuController';
 import Link from 'next/link'
 import { useState } from "react";
-import { useTranslations } from "next-intl";
 import { Dish, Favs, Order } from "../interfaces/DishInterface";
 import { updateStatus } from "../controllers/ordersController";
 const classes = require('../styles/catalog.module.css');
@@ -198,4 +197,15 @@ export const OrderControls = ({ role, token, orderId, currentStatus, locale }: a
             </button>
         </div>
     )
+}
+
+export const SkillCard = ({ skill }: any) => {
+    return (
+        <div className='rounded shadow-lg inline-block overflow-hidden w-80 h-36 ml-8 break-words'>
+            <img className="w-8 inline-block" src={skill.icon} />
+            <h2 className="inline-block">{skill.name}</h2>
+            <progress className="inline-block ml-8" id={`skill_${skill.name}`} value={skill.level} max="100">{skill.level}%</progress>
+            <p>{skill.description}</p>
+        </div>
+    );
 }

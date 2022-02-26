@@ -6,7 +6,6 @@ import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../../components/checkouts/CheckoutForm";
 import { bitcoin, creditCard } from "../../controllers/checkoutController";
 import { Dish, SelectedDishes } from "../../interfaces/DishInterface";
-import { useTranslations } from "next-intl";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 type CheckoutModalProps = {

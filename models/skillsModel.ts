@@ -18,6 +18,10 @@ const skillsSchema = mongoose.Schema({
     locale: {
         type: String,
         enum: ['en', 'es']
+    },
+    category: {
+        type: String,
+        required: true
     }
 });
 

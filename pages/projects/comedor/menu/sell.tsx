@@ -7,7 +7,7 @@ import { increaseCount, decreaseCount, clearSellValues } from "../../../../contr
 import { CheckoutModal } from "../../../../components/modals/CheckoutModal";
 import { Dish, SelectedDishes } from "../../../../interfaces/DishInterface";
 import projectLayout from "../../../../layouts/projectLayout";
-import { useTranslations } from "next-intl";
+import { useRouter } from "next/router";
 const classes = require('../../../../styles/tooltip.module.css');
 
 type SellProps = {
@@ -19,13 +19,13 @@ type SellProps = {
 }
 
 const sell = ({ role, userId, userName, items, token }: SellProps) => {
+    const router = useRouter();
     const [dishCounters, setDishCounters] = useState(() => items.map((x: Dish) => 0));
     const [selectedDishes, setSelectedDishes] = useState<SelectedDishes[]>([]);
     const [totalDishes, setTotalDishes] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
     const [showModal, setShowModal] = useState<string>('hidden'); // 'hidden' to have the modal closed and '' to open it
     const [loaded, setLoaded] = useState(false);
-    const t = useTranslations("sell");
 
     useEffect(() => {
         if (!loaded) {
@@ -38,34 +38,33 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
         setLoaded(true);
     }, [showModal])
     if (!role) {
-        return (<>{t("error")}</>)
+        return (<>Error</>)
     } else {
         return (
             <>
                 <Head>
-                    <title>{role !== 'user' ? t("sell") : t("buy")}</title>
-                    <meta name={role !== 'user' ? t("sell") : t("buy")} content={role !== 'user' ? t("sell") : t("buy")} />
+                    <title>{role !== 'user' ? router.locale === 'en' ? 'Buy' : 'Comprar' : router.locale === 'en' ? 'Catalog' : 'Catalogo'}</title>
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
                 <div className={showModal === '' ? 'pointer-events-none' : ''}>
                     <section>
-                        <h1>{role !== 'user' ? t("sell") : t("buy")} dishes</h1>
+                        <h1>{role !== 'user' ? router.locale === 'en' ? 'Buy' : 'Comprar' : router.locale === 'en' ? 'Catalog' : 'Catalogo'}</h1>
                         <br />
                         <div className='card inline-block mx-2'>
                             {
                                 items.map((item: Dish, i: number) => {
                                     return (
-                                        <div key={`card` + i} className="card inline-block mx-2">
+                                        <div key={`card` + i} className="inline-block mx-2">
                                             <div onClick={() => increaseCount(i, item, dishCounters[i], dishCounters, setDishCounters, totalDishes, setTotalDishes, selectedDishes, setSelectedDishes, totalPrice, setTotalPrice)} className={`${classes.tooltip} cursor-pointer hover:border-4 hover:border-cyan-600`}>
-                                                <span className={classes.tooltiptext}>{t("add")}</span>
+                                                <span className={classes.tooltiptext}>{router.locale === 'en' ? 'Add' : 'Añadir'}</span>
                                                 <Card item={item} />
                                             </div>
                                             <br />
                                             <button onClick={() => decreaseCount(i, item, dishCounters[i], dishCounters, setDishCounters, totalDishes, setTotalDishes, selectedDishes, setSelectedDishes, totalPrice, setTotalPrice)}
-                                                className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+                                                className="inline-block mx-2 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
                                                 style={{ width: "100%" }}
                                             >
-                                                <FaTrashAlt />
+                                                <FaTrashAlt className="inline-block mx-2" />
                                             </button>
                                             <br />
                                             <p>{dishCounters[i]}</p>
@@ -77,15 +76,15 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                     </section>
                     <br />
                     <section>
-                        <p>{t("info")}</p>
+                        <p>{router.locale === 'en' ? 'Info' : 'Informacion'}</p>
                         <div className='card inline-block mx-2'>
-                            <table className="table-auto border-2">
+                            <table className="table-auto border-2 inline-block mx-2">
                                 <thead>
                                     <tr className="border-2">
                                         <th className="border-2">#</th>
-                                        <th className="border-2">{t("dish")}</th>
-                                        <th className="border-2">{t("quantity")}</th>
-                                        <th className="border-2">{t("price")}</th>
+                                        <th className="border-2">{router.locale === 'en' ? 'Dish' : 'Platillo'}</th>
+                                        <th className="border-2">{router.locale === 'en' ? 'Quantity' : 'Cantidad'}</th>
+                                        <th className="border-2">{router.locale === 'en' ? 'Price' : 'Precio'}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -118,8 +117,8 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                             <table className="table-auto border-2">
                                 <thead>
                                     <tr className="border-2">
-                                        <th className="border-2">{t("totalDishes")}</th>
-                                        <th className="border-2">{t("totalPrice")}</th>
+                                        <th className="border-2">{router.locale === 'en' ? 'Total Dishes' : 'Total de platos'}</th>
+                                        <th className="border-2">{router.locale === 'en' ? 'Total Payment' : 'Total a pagar'}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -139,7 +138,7 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                         <button
                             className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
                         >
-                            <FaThumbsDown /> {t("cancel")}
+                            <FaThumbsDown className="inline-block mx-2" /> {router.locale === 'en' ? 'Cancel' : 'Cancelar'}
                         </button>
                         <button
                             // onClick={() => processTransaction(totalPrice, totalDishes, token, userId, undefined, selectedDishes, dishCounters, items)}
@@ -147,7 +146,7 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                             className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                             style={{ marginLeft: "2vw" }}
                         >
-                            <FaThumbsUp /> {t("submit")}
+                            <FaThumbsUp className="inline-block mx-2" /> {router.locale === 'en' ? 'Submit' : 'Procesar'}
                         </button>
                     </section>
                 </div>
@@ -163,6 +162,7 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                     selectedDishes={selectedDishes}
                     dishCounters={dishCounters}
                     items={items}
+                    locale={router.locale}
                 />
             </>
         )
@@ -194,10 +194,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 userId: context.req.cookies.userId ?? null,
                 userName: context.req.cookies.userName ?? null,
                 token: context.req.cookies.token ?? null,
-                messages: {
-                    ...require(`../../../../public/static/messages/sell/${context.locale}.json`),
-                    ...require(`../../../../public/static/messages/navbar/${context.locale}.json`),
-                },
             }
         }
     } catch (error) {

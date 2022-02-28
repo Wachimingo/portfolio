@@ -21,8 +21,8 @@ type CardProps = {
 
 export const Card = ({ item }: CardProps) => {
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg xsm:w-screen">
-            <img className="w-full" id={`img_${item?._id}`} src={`${item?.image}`} alt={item?.name} />
+        <div className="max-w-sm rounded overflow-hidden shadow-lg samsungS8:w-32 content-center">
+            <img className="w-screen" id={`img_${item?._id}`} src={`${item?.image}`} alt={item?.name} />
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2" id={`title_${item?._id}`}>{item?.name}</div>
                 <p className="text-gray-700 text-base text-sm" id={`description_${item?._id}`}>

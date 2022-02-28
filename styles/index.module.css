@@ -23,6 +23,90 @@
 .skillSection{
     margin-top: -15vh;
 }
+@media screen and (max-width: 1350px) {
+    .pic {
+        float:right;
+        /* position: absolute; */
+        left: 40vw;
+        top: 60vh;
+        height: 175px;
+        width: 175px;
+        border: 5px solid white;
+    }
+    .mainDiv{
+        top: 1vh;
+        left: 1vw;
+        position: absolute;
+    }
+    .skillSection{
+        margin: 0;
+        margin-top: -15vh;
+        margin-left: -8vw;
+    }
+}
+@media screen and (max-width: 912px) {
+    .pic {
+        float:right;
+        /* position: absolute; */
+        left: 40vw;
+        top: 60vh;
+        height: 175px;
+        width: 175px;
+        border: 5px solid white;
+    }
+    .mainDiv{
+        top: 1vh;
+        left: 1vw;
+        position: absolute;
+    }
+    .skillSection{
+        margin: 0;
+        margin-top: -15vh;
+        margin-left: -8vw;
+    }
+}
+@media screen and (max-width: 820px) {
+    .pic {
+        float:right;
+        /* position: absolute; */
+        left: 40vw;
+        top: 62vh;
+        height: 150px;
+        width: 150px;
+        border: 5px solid white;
+    }
+    .mainDiv{
+        top: 1vh;
+        left: 1vw;
+        position: absolute;
+    }
+    .skillSection{
+        margin: 0;
+        margin-top: -15vh;
+        margin-left: -8vw;
+    }
+}
+@media screen and (max-width: 412px) {
+    .pic {
+        float:right;
+        /* position: absolute; */
+        left: 40vw;
+        top: 68vh;
+        height: 100px;
+        width: 100px;
+        border: 5px solid white;
+    }
+    .mainDiv{
+        top: 1vh;
+        left: 1vw;
+        position: absolute;
+    }
+    .skillSection{
+        margin: 0;
+        margin-top: -20vh;
+        margin-left: -8vw;
+    }
+}
 
 @media screen and (max-width: 390px) {
     .pic {
@@ -45,4 +129,27 @@
         margin-left: -8vw;
     }
 }
-    
+
+@media screen and (max-width: 360px) {
+    .pic {
+        float:right;
+        /* position: absolute; */
+        left: 40vw;
+        top: 75vh;
+        height: 100px;
+        width: 100px;
+        border: 5px solid white;
+    }
+    .mainDiv{
+        top: 1vh;
+        left: 1vw;
+        position: absolute;
+    }
+    .skillSection{
+        margin: 0;
+        margin-top: -20vh;
+        margin-left: -8vw;
+    }
+}
+
+

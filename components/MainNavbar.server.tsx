@@ -21,9 +21,9 @@ const MainNavbar = () => {
     if (!isMounted) return <>{router.locale === 'en' ? 'Loading' : 'Cargando'}</>
     return (
         <>
-            <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-slate-800 mb-3 overflow-visible">
+            <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-slate-800 mb-3 overflow-visible w-screen">
                 <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-                    <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+                    <div className="w-screen relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
                         <Link href='/' passHref>
                             <a
                                 className="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white"

@@ -48,13 +48,19 @@ const catalog = ({ items, favs, categories, token, userId, error }: propsType) =
             </Head>
             <div className={showModal === '' ? 'pointer-events-none' : ''}>
                 <h1 className='text-2xl'>{router.locale === 'en' ? 'Catalog' : 'Catalogo'}</h1>
-                <button type="button" className={`bg-cyan-500 text-white ${classes.addButton}`} onClick={() => setShowModal('')}>+</button>
+                <button type="button" className={`bg-cyan-500 text-white samsungS8:ml-0 ${classes.addButton}`} onClick={() => setShowModal('')}>+</button>
                 <br />
                 {/* Display items section */}
                 <section>
                     {items?.map((item: Dish) => {
                         return (
-                            <div key={item!._id} id={`itemBody_${item!._id}`} className={item!.forToday ? `xl:inline-block xl:mx-2  ${classes.itemIsForToday}` : `xl:inline-block xl:mx-2`} >
+                            <div
+                                key={item!._id}
+                                id={`itemBody_${item!._id}`}
+                                className={
+                                    item!.forToday
+                                        ? `xl:inline-block xl:mx-2 w-96 overflow-hidden border-2 border-graycontent-center  ${classes.catalog}`
+                                        : `xl:inline-block xl:mx-2 overflow-hidden w-96 sm:ml-3  content-center ${classes.catalog}`} >
                                 {
                                     session?.user.role === 'admin' ?? 'helper'
                                         ?

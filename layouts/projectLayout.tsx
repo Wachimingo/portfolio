@@ -11,7 +11,7 @@ const projectLayout = ({ children }: any) => {
     }, [router.locale])
 
     const getNav = async (project: string) => {
-        const result = await fetch(`http://localhost:3000/api/navbar?project=${project}&locale=${router.locale}`, {
+        const result = await fetch(`/api/navbar?project=${project}&locale=${router.locale}`, {
             method: 'GET'
         });
         const navItems: any = result.ok ? await result.json() : undefined;

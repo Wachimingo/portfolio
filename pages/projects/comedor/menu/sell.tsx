@@ -48,23 +48,23 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                 </Head>
                 <div className={showModal === '' ? 'pointer-events-none' : ''}>
                     <section>
-                        <h1>{role !== 'user' ? router.locale === 'en' ? 'Buy' : 'Comprar' : router.locale === 'en' ? 'Catalog' : 'Catalogo'}</h1>
+                        <h1 className="text-2xl">{role !== 'user' ? router.locale === 'en' ? 'Buy' : 'Comprar' : router.locale === 'en' ? 'Catalog' : 'Catalogo'}</h1>
                         <br />
-                        <div className='card inline-block mx-2'>
+                        <div className='inline-block xl:mx-2'>
                             {
                                 items.map((item: Dish, i: number) => {
                                     return (
-                                        <div key={`card` + i} className="inline-block mx-2">
+                                        <div key={`card` + i} className="inline-block xl:mx-2">
                                             <div onClick={() => increaseCount(i, item, dishCounters[i], dishCounters, setDishCounters, totalDishes, setTotalDishes, selectedDishes, setSelectedDishes, totalPrice, setTotalPrice)} className={`${classes.tooltip} cursor-pointer hover:border-4 hover:border-cyan-600`}>
                                                 <span className={classes.tooltiptext}>{router.locale === 'en' ? 'Add' : 'Añadir'}</span>
                                                 <Card item={item} />
                                             </div>
                                             <br />
                                             <button onClick={() => decreaseCount(i, item, dishCounters[i], dishCounters, setDishCounters, totalDishes, setTotalDishes, selectedDishes, setSelectedDishes, totalPrice, setTotalPrice)}
-                                                className="inline-block mx-2 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+                                                className="inline-block xl:mx-2 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
                                                 style={{ width: "100%" }}
                                             >
-                                                <FaTrashAlt className="inline-block mx-2" />
+                                                <FaTrashAlt className="inline-block xl:mx-2" />
                                             </button>
                                             <br />
                                             <p>{dishCounters[i]}</p>
@@ -77,7 +77,7 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
                     <br />
                     <section>
                         <p>{router.locale === 'en' ? 'Info' : 'Informacion'}</p>
-                        <div className='card inline-block mx-2'>
+                        <div className='inline-block mx-2'>
                             <table className="table-auto border-2 inline-block mx-2">
                                 <thead>
                                     <tr className="border-2">

@@ -39,3 +39,16 @@
     color: #F4F147;
     background-color: #E2E1E1;
 }
+
+@media screen and (max-width: 390px) {
+    .addButton{
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+        float: right;
+        position: sticky;
+        top: 90%;
+        left: 85%;
+    }
+}
+   

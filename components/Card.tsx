@@ -21,7 +21,7 @@ type CardProps = {
 
 export const Card = ({ item }: CardProps) => {
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg" style={{ width: "25vw" }}>
+        <div className="max-w-sm rounded overflow-hidden shadow-lg xsm:w-screen">
             <img className="w-full" id={`img_${item?._id}`} src={`${item?.image}`} alt={item?.name} />
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2" id={`title_${item?._id}`}>{item?.name}</div>
@@ -51,7 +51,7 @@ type ControlButtonsProps = {
 export const ControlButtons = ({ token, item, favs, setItem, setShowModal, _id }: ControlButtonsProps) => {
     const [state, setState] = useState(item!.forToday)
     return (
-        <div>
+        <div className="xsm:text-2xl mt-2">
             <span
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
@@ -109,7 +109,7 @@ type OrderCardProps = {
 
 export const OrderCard = ({ order, role, token, locale }: OrderCardProps) => {
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg card inline-block mx-2" style={{ width: "25vw" }} key={'order' + order._id}>
+        <div key={'order' + order._id} className="max-w-sm rounded overflow-hidden shadow-lg card inline-block mx-2 xsm:w-screen" >
             <div className="px-6 py-4">
                 {
                     role === 'admin'

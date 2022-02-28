@@ -41,40 +41,54 @@ const MainNavbar = () => {
                     </div>
                     <div
                         className={
-                            "lg:flex flex-grow items-center" +
+                            "lg:flex lg:flex-grow items-center grid" +
                             (navbarOpen ? " flex" : " hidden")
                         }
                         id="navbar"
                     >
-                        <Link href='/projects' passHref>
-                            <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{router.locale === 'en' ? 'Projects' : 'Proyectos'}</a>
-                        </Link>
-                        <Link href='/skills' passHref>
-                            <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{router.locale === 'en' ? 'Skills' : 'Habilidades'}</a>
-                        </Link>
-                        <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
+                        <ul className="">
+                            <li className="xl:inline-block">
+                                <Link href='/projects' passHref>
+                                    <a
+                                        className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'
+                                    >
+                                        {router.locale === 'en' ? 'Projects' : 'Proyectos'}
+                                    </a>
+                                </Link>
+                            </li>
+                            <li className="xl:inline-block">
+                                <Link href='/skills' passHref>
+                                    <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{router.locale === 'en' ? 'Skills' : 'Habilidades'}</a>
+                                </Link>
+                            </li>
+                        </ul>
+                        <ul className="xl:absolute xl:right-8">
                             {
                                 !session
                                     ?
-                                    <li className="nav-item">
+                                    <li className="xl:inline-block">
                                         <Link href={'/auth/signup'} passHref>
                                             <a
                                                 className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
                                             >
-                                                <i className="fab fa-twitter text-lg leading-lg text-white opacity-75"></i><span className="ml-2">{router.locale === 'en' ? 'Sign up' : 'Registrarse'}</span>
+                                                {router.locale === 'en' ? 'Sign up' : 'Registrarse'}
                                             </a>
                                         </Link>
                                     </li>
                                     :
                                     undefined
                             }
-                            <li className="nav-item">
+                            <li className="xl:inline-block">
                                 <Link href={!session ? '/auth/signin' : '/auth/signout'} passHref>
                                     <a className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-7">{!session ? router.locale === 'en' ? 'Sign In' : 'Ingresar' : router.locale === 'en' ? 'Sign Out' : 'Salir'}</a>
                                 </Link>
                             </li>
-                            <LocaleSwitcher />
+
                         </ul>
+                        <div className="xl:absolute xl:right-0">
+                            <LocaleSwitcher />
+                        </div>
+
                     </div>
                 </div>
             </nav>

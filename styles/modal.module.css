@@ -3,8 +3,9 @@
     margin-top: -70vh;
 }
 
-@media only screen and (max-width: 600px) {
+@media screen and (max-width: 390px) {
     .aligment{
-        margin-left: 0.5%;
+        margin-left: 0;
+        margin-top: -250vh;
     }
   }

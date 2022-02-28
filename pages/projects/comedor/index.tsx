@@ -13,9 +13,10 @@ const index = ({ items, content, error }: any) => {
             <br />
             {/* Main section */}
             <section className={`text-center`}>
-                <div className="text-black text-xl text-bold bg-white w-72" style={{ marginLeft: "42vw" }}>
+                <div className="text-black text-xl text-bold bg-white right-50">
                     <h1 className="text-2xl">{content.title}</h1>
                 </div>
+                <br />
                 <Image src={`/logo.jpg`} alt="logo" width="250" height="250" />
                 <br />
                 <h2>{content.slogan}</h2>
@@ -42,7 +43,7 @@ const index = ({ items, content, error }: any) => {
                             height="300"
                         />
                     </div>
-                    <div className="inline-block ml-24">
+                    <div className="inline-block xl:ml-24">
                         <h4>{content.lunch}</h4>
                         <Image
                             src='/assets/lunch.jpg'
@@ -51,7 +52,7 @@ const index = ({ items, content, error }: any) => {
                             height="300"
                         />
                     </div>
-                    <div className="inline-block ml-24">
+                    <div className="inline-block xl:ml-24">
                         <h4>{content.dinner}</h4>
                         <Image
                             src='/assets/dinner.jpg'

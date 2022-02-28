@@ -20,22 +20,23 @@ const Home = ({ content, skills, locale, stylings, databases, backends, frontend
         <meta name={content.title} content={content.content} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${classes.curve} text-white text-2xl`}>
+      <main className={`text-white text-2xl relative`}>
+        <div className={classes.curve}></div>
         <br />
-        <div className='inline-block'>
+        <div className={`inline-block ${classes.mainDiv}`}>
           <h1 className="text-2xl">Wachimingo</h1>
           <br />
           <p className="text-base">{content.welcome}</p>
         </div>
         <div className={`${classes.pic}`}>
           <Image
-            src='/assets/profile.jpg'
+            src="/assets/profile.jpg"
             width={250}
             height={250}
           />
         </div>
       </main>
-      <div style={{ marginTop: "-15vh" }}>
+      <div className={classes.skillSection}>
         <h2 className="text-2xl">{locale === 'en' ? 'My Skills' : 'Mis habilidades'}</h2>
         <section className="mb-12">
           <h3 className="text-xl">Frontend</h3>
@@ -61,6 +62,7 @@ const Home = ({ content, skills, locale, stylings, databases, backends, frontend
         </section>
         <section className="mb-12">
           <h3 className="text-xl">{locale === 'en' ? 'Database' : 'Base de datos'}</h3>
+          <br />
           {
             databases.map((skill: any, i: number) => {
               return (

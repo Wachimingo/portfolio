@@ -23,12 +23,12 @@ const Projects = ({ items }: ProjectsProps) => {
         <>
             <h1 className="text-2xl">{router.locale === 'en' ? 'Projects' : 'Proyectos'}</h1>
             <br />
-            <section className="inline-block mx-2">
+            <section className="inline-block">
                 {
                     items.map((item: any, i: number) => {
                         return (
                             <Link key={'link' + i} href={{ pathname: item.link }}>
-                                <div className="max-w-sm rounded overflow-hidden shadow-lg hover:cursor-pointer" style={{ width: "25vw" }}>
+                                <div className="max-w-sm rounded overflow-hidden shadow-lg hover:cursor-pointer xl:w-80 sm:w-90">
                                     <img className="w-full" id={`img_${item._id}`} src={`${item.image}`} alt={item.name} />
                                     <div className="px-6 py-4">
                                         <div className="font-bold text-xl mb-2" id={`title_${item._id}`}>{item.name}</div>

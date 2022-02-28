@@ -165,7 +165,7 @@ const transactionDetails = (
             </table>
             <br />
             <br />
-            <table className="table-auto border-2 ml-28 ">
+            <table className="table-auto border-2 xl:ml-28 ">
                 <thead>
                     <tr className="border-2 bg-slate-400">
                         <th className="border-2">{locale === 'en' ? 'Total Dishes' : 'Total de platos'}</th>
@@ -183,7 +183,9 @@ const transactionDetails = (
                     </tr>
                 </tbody>
             </table>
+            <br />
             <h3>{locale === 'en' ? 'Payment method' : 'Metodo de pago'}</h3>
+            <br />
             <button
                 className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
             >

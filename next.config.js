@@ -1,4 +1,3 @@
-const path = require('path');
 const withPreact = require('next-plugin-preact');
 /* eslint-disable prettier/prettier */
 /** @type {import('next').NextConfig} */

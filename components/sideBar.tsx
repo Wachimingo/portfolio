@@ -58,8 +58,7 @@ const SideBar = ({ nav, project }: SideBarProps) => {
             </div>
             <button
                 type="button"
-                className={`fixed top-24 ${hide ? 'left-0' : 'left-52'} bg-white rounded-full flex text-black z-20`}
-                style={{ fontSize: "2vw" }}
+                className={`fixed top-24 ${hide ? 'left-0' : 'left-52'} bg-white rounded-full flex text-black z-20 text-2xl`}
                 onClick={() => { setHide(!hide) }}
             >
                 {

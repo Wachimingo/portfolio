@@ -1,15 +1,48 @@
 .curve {
+    z-index: -100;
     margin-top: -1.2vh;
-    display: block;
+    /* display: block; */
     box-sizing: border-box;
     height: 500px;
     background-color: #34495E;
     clip-path: ellipse(300% 100% at 275% 0%);
 }
+.mainDiv{
+    top: 1vh;
+    left: 7vw;
+    position: absolute;
+}
 .pic {
     float:right;
-    margin-right: 10vw;
-    margin-top: 1vh;
+    position: absolute;
+    right: 2vw;
+    margin-top: -50vh;
     height: 260px;
     border: 5px solid white;
 }
+.skillSection{
+    margin-top: -15vh;
+}
+
+@media screen and (max-width: 390px) {
+    .pic {
+        float:right;
+        /* position: absolute; */
+        left: 40vw;
+        top: 70vh;
+        height: 100px;
+        width: 100px;
+        border: 5px solid white;
+    }
+    .mainDiv{
+        top: 1vh;
+        left: 1vw;
+        position: absolute;
+    }
+    .skillSection{
+        margin: 0;
+        margin-top: -20vh;
+        margin-left: -8vw;
+    }
+}
+    

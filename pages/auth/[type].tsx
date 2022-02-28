@@ -46,11 +46,12 @@ const Auth = memo(({ type, content }: AuthProps) => {
         <meta name="Auth" content={`${type}`} />
       </Head>
 
-      <section className="inline-block">
-        <h1 className="">{type}</h1>
-        <div style={{ width: "25vw" }}>
+      <section className="inline-block w-max">
+        <h1 className="text-2xl">{type}</h1>
+        <br />
+        <div className='xsm:w-screen lg:w-80'>
           <form
-            className='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800'
+            className='bg-slate-800 shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800'
             onSubmit={
               type === 'signin'
                 ? handleSubmit((data: any) => signin(data, setSession, router))

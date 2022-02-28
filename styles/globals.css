@@ -12,8 +12,6 @@ body {
     background-size: cover;
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 a {
@@ -22,12 +20,8 @@ a {
 }
 
 * {
-  font-family: oxygen;
   text-align: center;
   box-sizing: border-box;
-}
-
-@font-face {
-  font-family: oxygen;
-  src: url(Oxygen-Regular.ttf);
+  padding: 0;
+  margin: 0;
 }

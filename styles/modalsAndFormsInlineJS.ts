@@ -1,4 +1,4 @@
-export const modalBox = 'overflow-x-hidden overflow-y-auto fixed h-modal md:h-full top-4 left-0 right-0 md:inset-0 z-50 justify-center items-center';
+export const modalBox = 'overflow-x-hidden overflow-y-auto fixed h-modal md:h-full  md:inset-0 z-50 justify-center items-center';
 export const formInput = 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
 export const formLabel = 'block text-gray-700 text-sm font-bold mb-2'
 export const closeXButton = 'text-white bg-transparent hover:bg-red-900 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white'

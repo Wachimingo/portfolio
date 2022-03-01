@@ -1,5 +1,8 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import "../utils/dbConnection";
+import Locale from "../models/localeModel";
+import SkillsModel from "../models/skillsModel";
 
 const skills = ({ skills, content }: any) => {
     return (
@@ -11,15 +14,22 @@ const skills = ({ skills, content }: any) => {
             </Head>
             <h1 className="text-2xl">{content.description}</h1>
             <br />
-            <section className="mt-8">
+            <section className="mt-8 grid grid-cols-4">
                 {
                     skills.map((skill: any, i: number) => {
                         return (
-                            <div key={'skill' + i} className='rounded shadow-lg inline-block overflow-hidden w-80 h-36 ml-2 break-words'>
+                            <div key={'skill' + i} className='rounded shadow-lg inline-block overflow-hidden w-80 h-42 ml-2 break-words mb-4'>
                                 <img className="w-8 inline-block" src={skill.icon} />
                                 <h2 className="inline-block">{skill.name}</h2>
                                 <progress className="inline-block ml-8" id={`skill_${skill.name}`} value={skill.level} max="100">{skill.level}%</progress>
                                 <p>{skill.description}</p>
+                                <div className="px-6 pt-4 pb-2">
+                                    <span
+                                        className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                                    >
+                                        #{skill?.category}
+                                    </span>
+                                </div>
                             </div>
                         )
                     })
@@ -31,13 +41,13 @@ const skills = ({ skills, content }: any) => {
 
 export default skills;
 
-import "../utils/dbConnection";
-import Locale from "../models/localeModel";
-import SkillsModel from "../models/skillsModel";
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
-        const locale = await Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('skills').select('-__v');
-        const data = await SkillsModel.find({}).where('locale').equals(context.locale).select('-__v -locale');
+        //Creating vars with promises to await them all in parallel
+        const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('skills').select('-__v');
+        const getSkills = SkillsModel.find({}).where('locale').equals(context.locale).select('-__v -locale');
+        //Await all promises in parallel
+        const [locale, data] = await Promise.all([getLocale, getSkills]);
         return {
             props: {
                 skills: JSON.parse(JSON.stringify(data)),
@@ -45,7 +55,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             }
         }
     } catch (err) {
-
         return { props: { error: 'Something went wrong' } }
     }
 }

@@ -11,7 +11,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 const classes = require('./../styles/index.module.css');
 
-const Home = ({ content, skills, locale, stylings, databases, backends, frontends }: any) => {
+const Home = ({ content, locale, stylings, databases, backends, frontends }: any) => {
   const { session }: any = useContext(AuthContext);
   return (
     <div >
@@ -71,7 +71,7 @@ const Home = ({ content, skills, locale, stylings, databases, backends, frontend
             })
           }
         </section>
-        <section className="mb-12">
+        <section className="mb-2">
           <h3 className="text-xl">{locale === 'en' ? 'Styling' : 'Framework CSS'}</h3>
           <br />
           {
@@ -82,8 +82,17 @@ const Home = ({ content, skills, locale, stylings, databases, backends, frontend
             })
           }
         </section>
-        <section className="mb-4">
-          <h1 className="text-xl">{locale === 'en' ? 'Do not forget to check my projects' : 'No te olvides de ver mis proyectos'}</h1>
+        <section className="mb-12">
+          <h2 className="text-xl">{locale === 'en' ? 'See more skills' : 'Ver mas habilidades'}</h2>
+          <br />
+          <Link href={'/skills'} passHref>
+            <a className="bg-transparent hover:bg-slate-500 text-slate-700 font-semibold hover:text-white py-2 px-4 border border-slate-500 hover:border-transparent rounded">
+              {locale === 'en' ? 'Go to skills' : 'Ir a habilidades'}
+            </a>
+          </Link>
+        </section>
+        <section className="mb-12">
+          <h2 className="text-xl">{locale === 'en' ? 'Do not forget to check my projects' : 'No te olvides de ver mis proyectos'}</h2>
           <br />
           <Link href={'/projects'} passHref>
             <a className="bg-transparent hover:bg-slate-500 text-slate-700 font-semibold hover:text-white py-2 px-4 border border-slate-500 hover:border-transparent rounded">
@@ -120,14 +129,17 @@ export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const locale = await Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('mainIndex').select('-__v');
-    const skills = await Skills.find({}).where('locale').equals(context.locale).select('-__v -locale');
-    const databases = skills.filter((skill: any) => {
-      return skill.category === 'database'
-    });
+    //Creating vars with promises to await them all in parallel
+    const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('mainIndex').select('-__v');
+    const getSkills = Skills.find({}).where('locale').equals(context.locale).select('-__v -locale');
+    //Await all promises in parallel
+    const [locale, skills] = await Promise.all([getLocale, getSkills]);
+    //Filtering skills by category in server to avoid client side filtering
+    const databases = skills.filter((skill: any) => { return skill.category === 'database' });
     const stylings = skills.filter((skill: any) => { return skill.category === 'styling' });
     const backend = skills.filter((skill: any) => { return skill.category === 'backend' });
     const frontend = skills.filter((skill: any) => { return skill.category === 'frontend' });
+    //Some var is ruturn in json as getServerSideProps doesn't do the serialization itself
     return {
       props: {
         content: locale[0].content,

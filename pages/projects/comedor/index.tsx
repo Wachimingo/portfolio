@@ -4,12 +4,17 @@ import Image from 'next/image'
 import Carousel from "../../../components/Carousel";
 const classes = require('../../../styles/comedorIndex.module.css');
 
-const index = ({ items, content, error }: any) => {
+const index = ({ items, content, error, locale }: any) => {
     if (error) {
         return <>{error}</>
     }
     return (
         <>
+            <Head>
+                <title>{locale === 'en' ? 'Restaurant' : 'Comedor'}</title>
+                <meta name={content.title} content={content.title} />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             <br />
             {/* Main section */}
             <section className={`text-center`}>
@@ -73,6 +78,7 @@ index.Layout = projectLayout;
 
 import "../../../utils/dbConnection";
 import Locale from "../../../models/localeModel";
+import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
@@ -93,7 +99,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 items: items.data,
                 content: locale[0].content,
                 error: null,
-                customClass: classes.backgroundImage1
+                customClass: classes.backgroundImage1,
+                locale: context.locale
             }
         }
     } catch (error) {

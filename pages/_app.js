@@ -4,17 +4,11 @@ import MainNavbar from '../components/MainNavbar.server';
 import './../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.min.css'
 import { ToastContainer } from 'react-toastify';
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect } from 'react'
 function MyApp({ Component, pageProps }) {
   const Layout = Component.Layout ?? Fragment;
-  const [isMounted, setIsMounted] = useState(false)
   useEffect(() => {
-    if (!isMounted) {
-      document.body.className = pageProps.customClass ?? '';
-    } else {
-      // import('react-toastify/dist/ReactToastify.min.css');
-    }
-    setIsMounted(true);
+    document.body.className = pageProps.customClass ?? '';
   }, [])
   return (
     <>

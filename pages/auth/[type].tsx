@@ -15,8 +15,8 @@ const Auth = memo(({ type, content }: AuthProps) => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
   const authActions: any = {
-    "signout": () => {
-      quitSession();
+    "signout": async () => {
+      await quitSession();
       router.replace('/');
     },
     "success": () => {
@@ -132,7 +132,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     }
   } catch (err) {
-
     return { props: { error: 'Something went wrong' } }
   }
 }

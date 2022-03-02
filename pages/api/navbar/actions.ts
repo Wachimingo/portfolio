@@ -1,10 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import './../../utils/dbConnection';
+import { NextApiRequest, NextApiResponse } from "next";
 
-//Model for MongoDB document
-import NavBar from '../../models/navbarModel';
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-    if (req.method === 'GET') {
+export const actions: any = {
+    "GET": async (req: NextApiRequest, res: NextApiResponse, NavBar: any) => {
         try {
             const data = await NavBar.find(req.query).select('-_id -__v');
             res.status(200).json(data)
@@ -13,7 +10,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 msg: 'error'
             })
         }
-    } else if (req.method === 'POST') {
+    },
+    "POST": async (req: NextApiRequest, res: NextApiResponse, NavBar: any) => {
         try {
             const newItem = new NavBar(req.body);
             newItem.save();
@@ -23,6 +21,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 error
             })
         }
+    },
+    "default": async (req: NextApiRequest, res: NextApiResponse) => {
+        return res.status(500).json({
+            message: 'Action not found'
+        })
     }
 }
-

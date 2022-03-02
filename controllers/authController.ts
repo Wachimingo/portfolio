@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { Login, Register } from '../interfaces/AuthInterface';
 
 export const signin = async (credentials: Login, setSession: Function, router: any) => {
-    const response = await fetch('/api/auth', {
+    const response = await fetch('/api/mainAuth', {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
@@ -27,7 +27,7 @@ export const signin = async (credentials: Login, setSession: Function, router: a
 }
 
 export const signup = async (input: Register, signIn: Function) => {
-    const response = await fetch('/api/auth', {
+    const response = await fetch('/api/mainAuth', {
         method: 'POST',
         headers: {
             'content-type': 'application/json',

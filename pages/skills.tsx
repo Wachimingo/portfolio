@@ -14,11 +14,11 @@ const skills = ({ skills, content }: any) => {
             </Head>
             <h1 className="text-2xl">{content.description}</h1>
             <br />
-            <section className="mt-8 grid grid-cols-4">
+            <section className="mt-8 grid xl:grid-cols-4 lg:grid-cols-2">
                 {
                     skills.map((skill: any, i: number) => {
                         return (
-                            <div key={'skill' + i} className='rounded shadow-lg inline-block overflow-hidden w-80 h-42 ml-2 break-words mb-4'>
+                            <div key={'skill' + i} className='rounded shadow-lg xl:inline-block lg:inline-block overflow-hidden w-80 h-42 ml-2 break-words mb-4'>
                                 <img className="w-8 inline-block" src={skill.icon} />
                                 <h2 className="inline-block">{skill.name}</h2>
                                 <progress className="inline-block ml-8" id={`skill_${skill.name}`} value={skill.level} max="100">{skill.level}%</progress>

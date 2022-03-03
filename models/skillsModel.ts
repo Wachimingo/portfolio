@@ -32,13 +32,4 @@ const skillsSchema = mongoose.Schema(
     }
 );
 
-skillsSchema.pre(/^find/, function (next: any) {
-    mongoose.model.Skills.populate({
-        path: 'category',
-        select: 'name',
-    });
-
-    next();
-});
-
 export default mongoose.models.Skills || mongoose.model("Skills", skillsSchema);

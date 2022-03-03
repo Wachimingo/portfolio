@@ -41,13 +41,13 @@ const MainNavbar = () => {
                     </div>
                     <div
                         className={
-                            "lg:flex lg:flex-grow items-center grid" +
+                            "lg:flex lg:flex-grow  items-center grid" +
                             (navbarOpen ? " flex" : " hidden")
                         }
                         id="navbar"
                     >
                         <ul className="">
-                            <li className="xl:inline-block">
+                            <li className="xl:inline-block lg:inline-block">
                                 <Link href='/projects' passHref>
                                     <a
                                         className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'
@@ -56,7 +56,7 @@ const MainNavbar = () => {
                                     </a>
                                 </Link>
                             </li>
-                            <li className="xl:inline-block">
+                            <li className="xl:inline-block lg:inline-block">
                                 <Link href='/skills' passHref>
                                     <a className='px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75'>{router.locale === 'en' ? 'Skills' : 'Habilidades'}</a>
                                 </Link>

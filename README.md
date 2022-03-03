@@ -25,3 +25,7 @@ Planning to add:
 
 Future projects:
 -Web game
+
+-02/03/2022
+-Updated API routes to replace IF statements for http methods to an object.
+-Updated 'skills' page's CSS to add breackpoints for cards to display correctly

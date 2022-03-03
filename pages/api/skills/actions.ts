@@ -6,7 +6,8 @@ export const actions: any = {
             const data = await Skills.find({}).where('locale').equals(req.query.locale).select('-__v');
             return res.status(200).json(data)
         } catch (error) {
-            return res.status(500).json(error)
+            console.log("TCL: error", error)
+            return res.status(500).json({ error })
         }
     },
     "POST": async (req: NextApiRequest, res: NextApiResponse, Skills: any) => {
@@ -17,7 +18,7 @@ export const actions: any = {
                 message: 'Created'
             })
         } catch (error) {
-            return res.status(500).json(error)
+            return res.status(500).json({ error })
         }
     },
     "default": async (req: NextApiRequest, res: NextApiResponse) => {

@@ -6,12 +6,13 @@ import { SkillCard } from '../components/Card';
 import "../utils/dbConnection";
 import Locale from "../models/localeModel";
 import Skills from "../models/skillsModel";
+import Categories from "../models/categoriesModel";
 import { FaFacebookF, FaLinkedinIn, FaRegEnvelope } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
 const classes = require('./../styles/index.module.css');
 
-const Home = ({ content, locale, stylings, databases, backends, frontends }: any) => {
+const Home = ({ content, locale, skills, categories }: any) => {
   const { session }: any = useContext(AuthContext);
   return (
     <div >
@@ -37,69 +38,25 @@ const Home = ({ content, locale, stylings, databases, backends, frontends }: any
         </div>
       </main>
       <div className={classes.skillSection}>
-        <h2 className="text-2xl">{locale === 'en' ? 'My Skills' : 'Mis habilidades'}</h2>
-        <section className="mb-12">
-          <h3 className="text-xl">Frontend</h3>
-          <br />
-          {
-            frontends.map((skill: any, i: number) => {
+        {
+          categories.map((cat: any) => {
+            if (cat.relatedTo === 'skills') {
               return (
-                <SkillCard skill={skill} />
+                <section className="mb-12">
+                  <h3 className="text-xl">{cat.name}</h3>
+                  <br />
+                  {
+                    skills.filter((skill: any) => skill.category.name === cat.name).map((item: any) => {
+                      return (
+                        <SkillCard skill={item} />
+                      )
+                    })
+                  }
+                </section>
               )
-            })
-          }
-        </section>
-        <section className="mb-12">
-          <h3 className="text-xl">Backend</h3>
-          <br />
-          {
-            backends.map((skill: any, i: number) => {
-              return (
-                <SkillCard skill={skill} />
-              )
-            })
-          }
-        </section>
-        <section className="mb-12">
-          <h3 className="text-xl">{locale === 'en' ? 'Database' : 'Base de datos'}</h3>
-          <br />
-          {
-            databases.map((skill: any, i: number) => {
-              return (
-                <SkillCard skill={skill} />
-              )
-            })
-          }
-        </section>
-        <section className="mb-2">
-          <h3 className="text-xl">{locale === 'en' ? 'Styling' : 'Framework CSS'}</h3>
-          <br />
-          {
-            stylings.map((skill: any, i: number) => {
-              return (
-                <SkillCard skill={skill} />
-              )
-            })
-          }
-        </section>
-        <section className="mb-12">
-          <h2 className="text-xl">{locale === 'en' ? 'See more skills' : 'Ver mas habilidades'}</h2>
-          <br />
-          <Link href={'/skills'} passHref>
-            <a className="bg-transparent hover:bg-slate-500 text-slate-700 font-semibold hover:text-white py-2 px-4 border border-slate-500 hover:border-transparent rounded">
-              {locale === 'en' ? 'Go to skills' : 'Ir a habilidades'}
-            </a>
-          </Link>
-        </section>
-        <section className="mb-12">
-          <h2 className="text-xl">{locale === 'en' ? 'Do not forget to check my projects' : 'No te olvides de ver mis proyectos'}</h2>
-          <br />
-          <Link href={'/projects'} passHref>
-            <a className="bg-transparent hover:bg-slate-500 text-slate-700 font-semibold hover:text-white py-2 px-4 border border-slate-500 hover:border-transparent rounded">
-              {locale === 'en' ? 'Go to projects' : 'Ir a proyectos'}
-            </a>
-          </Link>
-        </section>
+            } else undefined
+          })
+        }
       </div>
       <footer className='bg-slate-800 text-white text-xl'>
         <div className='inline-block mx-2'>
@@ -132,22 +89,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     //Creating vars with promises to await them all in parallel
     const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('mainIndex').select('-__v');
     const getSkills = Skills.find({}).where('locale').equals(context.locale).select('-__v -locale');
+    const getCategories = Categories.find({}).where('locale').equals(context.locale).select('-__v');
     //Await all promises in parallel
-    const [locale, skills] = await Promise.all([getLocale, getSkills]);
-    //Filtering skills by category in server to avoid client side filtering
-    const databases = skills.filter((skill: any) => { return skill.category === 'database' });
-    const stylings = skills.filter((skill: any) => { return skill.category === 'styling' });
-    const backend = skills.filter((skill: any) => { return skill.category === 'backend' });
-    const frontend = skills.filter((skill: any) => { return skill.category === 'frontend' });
+    const [locale, skills, categories] = await Promise.all([getLocale, getSkills, getCategories]);
+
     //Some var is ruturn in json as getServerSideProps doesn't do the serialization itself
     return {
       props: {
         content: locale[0].content,
         skills: JSON.parse(JSON.stringify(skills)),
-        databases: JSON.parse(JSON.stringify(databases)),
-        stylings: JSON.parse(JSON.stringify(stylings)),
-        backends: JSON.parse(JSON.stringify(backend)),
-        frontends: JSON.parse(JSON.stringify(frontend)),
+        categories: JSON.parse(JSON.stringify(categories)),
         locale: context.locale
       }
     }

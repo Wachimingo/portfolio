@@ -3,8 +3,10 @@ import Head from "next/head";
 import "../utils/dbConnection";
 import Locale from "../models/localeModel";
 import SkillsModel from "../models/skillsModel";
+import Categories from "../models/categoriesModel";
+import { SkillCard } from "../components/Card";
 
-const skills = ({ skills, content }: any) => {
+const skills = ({ skills, content, categories }: any) => {
     return (
         <>
             <Head>
@@ -14,24 +16,24 @@ const skills = ({ skills, content }: any) => {
             </Head>
             <h1 className="text-2xl">{content.description}</h1>
             <br />
-            <section className="mt-8 grid xl:grid-cols-4 lg:grid-cols-2">
+            <section >
                 {
-                    skills.map((skill: any, i: number) => {
-                        return (
-                            <div key={'skill' + i} className='rounded shadow-lg xl:inline-block lg:inline-block overflow-hidden w-80 h-42 ml-2 break-words mb-4'>
-                                <img className="w-8 inline-block" src={skill.icon} />
-                                <h2 className="inline-block">{skill.name}</h2>
-                                <progress className="inline-block ml-8" id={`skill_${skill.name}`} value={skill.level} max="100">{skill.level}%</progress>
-                                <p>{skill.description}</p>
-                                <div className="px-6 pt-4 pb-2">
-                                    <span
-                                        className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                                    >
-                                        #{skill?.category}
-                                    </span>
-                                </div>
-                            </div>
-                        )
+                    categories.map((cat: any) => {
+                        if (cat.relatedTo === 'skills') {
+                            return (
+                                <section className="mb-12">
+                                    <h3 className="text-xl">{cat.name}</h3>
+                                    <br />
+                                    {
+                                        skills.filter((skill: any) => skill.category.name === cat.name).map((item: any) => {
+                                            return (
+                                                <SkillCard skill={item} />
+                                            )
+                                        })
+                                    }
+                                </section>
+                            )
+                        } else undefined
                     })
                 }
             </section>
@@ -46,11 +48,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         //Creating vars with promises to await them all in parallel
         const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('skills').select('-__v');
         const getSkills = SkillsModel.find({}).where('locale').equals(context.locale).select('-__v -locale');
+        const getCategories = Categories.find({}).where('locale').equals(context.locale).select('-__v');
         //Await all promises in parallel
-        const [locale, data] = await Promise.all([getLocale, getSkills]);
+        const [locale, data, categories] = await Promise.all([getLocale, getSkills, getCategories]);
         return {
             props: {
                 skills: JSON.parse(JSON.stringify(data)),
+                categories: JSON.parse(JSON.stringify(categories)),
                 content: locale[0].content
             }
         }

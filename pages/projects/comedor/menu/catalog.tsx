@@ -118,7 +118,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         const fetchItems = fetch(`${process.env.managementBackend}/api/v1/menu?limit=1000`, {
             method: 'GET',
         })
-        const fetchCategories = fetch(`${process.env.managementBackend}/api/v1/categories/`, {
+        const fetchCategories = fetch(`${process.env.managementBackend}/api/v1/categories?locale=${context.locale}`, {
             method: 'GET',
         })
         const [res1, res3] = await Promise.all([fetchItems, fetchCategories]);

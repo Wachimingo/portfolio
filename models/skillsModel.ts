@@ -1,28 +1,44 @@
 const mongoose = require('mongoose');
-
-const skillsSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true
+import categoriesModel from "./categoriesModel";
+const skillsSchema = mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String,
+        },
+        level: {
+            type: Number,
+            default: 0
+        },
+        icon: {
+            type: String
+        },
+        locale: {
+            type: String,
+            enum: ['en', 'es']
+        },
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: categoriesModel,
+            required: true
+        }
     },
-    description: {
-        type: String,
-    },
-    level: {
-        type: Number,
-        default: 0
-    },
-    icon: {
-        type: String
-    },
-    locale: {
-        type: String,
-        enum: ['en', 'es']
-    },
-    category: {
-        type: String,
-        required: true
+    {
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
     }
+);
+
+skillsSchema.pre(/^find/, function (next: any) {
+    this.populate({
+        path: 'category',
+        select: 'name',
+    });
+
+    next();
 });
 
 export default mongoose.models.Skills || mongoose.model("Skills", skillsSchema);

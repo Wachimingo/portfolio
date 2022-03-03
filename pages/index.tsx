@@ -103,7 +103,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   } catch (err) {
-
     return { props: { error: 'Something went wrong' } }
   }
 }

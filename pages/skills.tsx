@@ -16,7 +16,7 @@ const skills = ({ skills, content, categories }: any) => {
             </Head>
             <h1 className="text-2xl">{content.description}</h1>
             <br />
-            <section >
+            <div >
                 {
                     categories.map((cat: any) => {
                         if (cat.relatedTo === 'skills') {
@@ -36,7 +36,7 @@ const skills = ({ skills, content, categories }: any) => {
                         } else undefined
                     })
                 }
-            </section>
+            </div>
         </>
     )
 }

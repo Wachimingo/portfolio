@@ -33,7 +33,7 @@ const skillsSchema = mongoose.Schema(
 );
 
 skillsSchema.pre(/^find/, function (next: any) {
-    this.populate({
+    mongoose.model.Skills.populate({
         path: 'category',
         select: 'name',
     });

@@ -46,7 +46,7 @@ export default skills;
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         //Creating vars with promises to await them all in parallel
-        const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('skills').select('-__v');
+        const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('skills').select('-__v').populate('Categories');
         const getSkills = SkillsModel.find({}).where('locale').equals(context.locale).select('-__v -locale');
         const getCategories = Categories.find({}).where('locale').equals(context.locale).select('-__v');
         //Await all promises in parallel

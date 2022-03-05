@@ -3,6 +3,10 @@ import projectLayout from "../../../layouts/projectLayout";
 import Image from 'next/image'
 import Carousel from "../../../components/Carousel";
 const classes = require('../../../styles/comedorIndex.module.css');
+// import "../../../utils/dbConnection";
+import "../../../utils/dbConnection";
+import Locale from "../../../models/localeModel";
+import Head from "next/head";
 
 const index = ({ items, content, error, locale }: any) => {
     if (error) {
@@ -75,10 +79,6 @@ const index = ({ items, content, error, locale }: any) => {
 export default index;
 
 index.Layout = projectLayout;
-
-import "../../../utils/dbConnection";
-import Locale from "../../../models/localeModel";
-import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {

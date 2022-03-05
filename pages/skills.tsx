@@ -1,5 +1,6 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+// import "../utils/dbConnection";
 import "../utils/dbConnection";
 import Locale from "../models/localeModel";
 import SkillsModel from "../models/skillsModel";

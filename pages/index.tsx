@@ -3,13 +3,14 @@ import { useContext } from 'react';
 import AuthContext from './../contexts/authContext'
 import Head from 'next/head';
 import { SkillCard } from '../components/Card';
+// import "../utils/dbConnection";
 import "../utils/dbConnection";
 import Locale from "../models/localeModel";
 import Skills from "../models/skillsModel";
 import Categories from "../models/categoriesModel";
 import { FaFacebookF, FaLinkedinIn, FaRegEnvelope } from 'react-icons/fa';
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 const classes = require('./../styles/index.module.css');
 
 const Home = ({ content, locale, skills, categories }: any) => {

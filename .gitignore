@@ -39,5 +39,6 @@ next.config.js
 *.tsbuildinfo
 
 .eslintrc.json
-
+.prettierignore
+.prettierrc
 .vercel

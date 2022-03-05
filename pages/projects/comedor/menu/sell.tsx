@@ -38,7 +38,7 @@ const sell = ({ role, userId, userName, items, token }: SellProps) => {
         setLoaded(true);
     }, [showModal])
     if (!role) {
-        return (<>Error</>)
+        return (<>{router.locale === 'en' ? 'You need to be logged in to see this page' : 'Necesita estar registrado para ver esta pagina'}</>)
     } else {
         return (
             <>

@@ -116,11 +116,14 @@ const Auth = memo(({ type, content }: AuthProps) => {
 
 export default Auth;
 
-import "../../utils/dbConnection";
+// import "../../utils/dbConnection";
+import { connect } from "mongoose"
 import Locale from "../../models/localeModel";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
   try {
+    connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
     const type = context.query.type;
     // const providers = await getProviders();
     // console.log(type)

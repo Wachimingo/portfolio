@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Carousel from "../../../components/Carousel";
 const classes = require('../../../styles/comedorIndex.module.css');
 // import "../../../utils/dbConnection";
-import "../../../utils/dbConnection";
+import { connect } from "mongoose"
 import Locale from "../../../models/localeModel";
 import Head from "next/head";
 
@@ -81,7 +81,9 @@ export default index;
 index.Layout = projectLayout;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
     try {
+        connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
         const classes = require('../../../styles/comedorIndex.module.css');
         const res = await fetch(`${process.env.managementBackend}/api/v1/menu/forToday?limit=10`, {
             method: 'GET',

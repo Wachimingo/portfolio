@@ -31,7 +31,8 @@
     "components/localeSwitcher.js",
     "pages/x.js",
     "components/Toast.js",
-    "models/skillsModel.ts"
+    "models/skillsModel.ts",
+    "utils/dbConnection.js"
   ],
   "exclude": [
     "node_modules",

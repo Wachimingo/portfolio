@@ -4,7 +4,7 @@ import AuthContext from './../contexts/authContext'
 import Head from 'next/head';
 import { SkillCard } from '../components/Card';
 // import "../utils/dbConnection";
-import "../utils/dbConnection";
+import { connect } from "mongoose"
 import Locale from "../models/localeModel";
 import Skills from "../models/skillsModel";
 import Categories from "../models/categoriesModel";
@@ -86,7 +86,9 @@ const Home = ({ content, locale, skills, categories }: any) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
   try {
+    connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
     //Creating vars with promises to await them all in parallel
     const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('mainIndex').select('-__v');
     const getSkills = Skills.find({}).where('locale').equals(context.locale).select('-__v -locale').populate('category');

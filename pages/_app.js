@@ -4,13 +4,10 @@ import MainNavbar from '../components/MainNavbar.server';
 import './../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.min.css'
 import { ToastContainer } from 'react-toastify';
-import { Fragment, useEffect } from 'react'
+import { Fragment } from 'react'
 import Script from 'next/script';
 function MyApp({ Component, pageProps }) {
   const Layout = Component.Layout ?? Fragment;
-  useEffect(() => {
-    document.body.className = pageProps.customClass ?? '';
-  }, [])
   return (
     <>
       <Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} type="text/partytown" />

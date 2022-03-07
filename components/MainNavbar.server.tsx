@@ -41,7 +41,7 @@ const MainNavbar = () => {
                     </div>
                     <div
                         className={
-                            "lg:flex lg:flex-grow  items-center grid" +
+                            "lg:flex lg:flex-grow xl:flex xl:flex-grow items-center grid" +
                             (navbarOpen ? " flex" : " hidden")
                         }
                         id="navbar"
@@ -62,11 +62,11 @@ const MainNavbar = () => {
                                 </Link>
                             </li>
                         </ul>
-                        <ul className="xl:absolute xl:right-16">
+                        <ul className="xl:absolute xl:right-16 lg:absolute lg:right-16">
                             {
                                 !session
                                     ?
-                                    <li className="xl:inline-block">
+                                    <li className="xl:inline-block lg:inline-block">
                                         <Link href={'/auth/signup'} passHref>
                                             <a
                                                 className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
@@ -78,7 +78,7 @@ const MainNavbar = () => {
                                     :
                                     undefined
                             }
-                            <li className="xl:inline-block">
+                            <li className="xl:inline-block lg:inline-block">
                                 <Link href={!session ? '/auth/signin' : '/auth/signout'} passHref>
                                     <a className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-7">{!session ? router.locale === 'en' ? 'Sign In' : 'Ingresar' : router.locale === 'en' ? 'Sign Out' : 'Salir'}</a>
                                 </Link>

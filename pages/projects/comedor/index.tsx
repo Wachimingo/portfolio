@@ -20,9 +20,18 @@ const index = ({ items, content, error, locale }: any) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <br />
+            <style jsx global>{`
+                body {
+                    background: url("https://i2.wp.com/diplomartbrussels.com/wp-content/uploads/2020/09/food-background-images-94-images-in-co-381169-png-images-pngio-food-background-png-1440_619.png?ssl=1");
+                    background-repeat: no-repeat;
+                    background-size: 100%;
+                    background-color: #fcf8f5;
+                }
+                `}
+            </style>
             {/* Main section */}
             <section className={`text-center`}>
-                <div className="text-black text-xl text-bold bg-white right-50">
+                <div className="text-black text-xl text-bold right-50">
                     <h1 className="text-2xl">{content.title}</h1>
                 </div>
                 <br />
@@ -83,8 +92,7 @@ index.Layout = projectLayout;
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
     try {
-        connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
-        const classes = require('../../../styles/comedorIndex.module.css');
+        const cn = await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
         const res = await fetch(`${process.env.managementBackend}/api/v1/menu/forToday?limit=10`, {
             method: 'GET',
             mode: 'cors',
@@ -101,7 +109,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 items: items.data,
                 content: locale[0].content,
                 error: null,
-                customClass: classes.backgroundImage1,
                 locale: context.locale
             }
         }
@@ -111,7 +118,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 items: null,
                 content: null,
                 error: 'No connection to Database',
-                customClass: classes.backgroundImage1
             }
         }
     }

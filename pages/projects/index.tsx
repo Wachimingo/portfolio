@@ -55,7 +55,7 @@ import { connect } from "mongoose"
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
     try {
-        connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
+        const cn = await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
         const data = await ProjectModel.find({}).where('locale').equals(context.locale).select('-__v');
         return {
             props: {

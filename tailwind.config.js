@@ -1,6 +1,6 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
-  mode: 'jit',
+  // mode: 'jit',
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./pages/**/**/*.{js,ts,jsx,tsx}",
@@ -8,10 +8,21 @@ module.exports = {
     './node_modules/react-toastify/dist/ReactToastify.min.css'
   ],
   theme: {
+    screens: {
+      'xs': '365px',
+      ...defaultTheme.screens,
+    },
     extend: {
       margin: {
-        '50vw': '50vw',
+        '350': '350px',
         'm2vw': '-2vw'
+      },
+      width: {
+        '1/2': '50%',
+        '2/3': '90%',
+      },
+      left: {
+        '1/2': '50%',
       },
     },
   },

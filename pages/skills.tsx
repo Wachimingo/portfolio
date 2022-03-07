@@ -47,7 +47,7 @@ export default skills;
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
     try {
-        connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
+        const cn = await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
         //Creating vars with promises to await them all in parallel
         const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('skills').select('-__v');
         const getSkills = SkillsModel.find({}).where('locale').equals(context.locale).select('-__v -locale').populate('category');

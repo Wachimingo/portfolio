@@ -5,9 +5,8 @@ module.exports = {
         ["tailwindcss", {
             config: join(__dirname, 'tailwind.config.js'),
         }],
-        ["postcss-minify", {
-
-        }],
+        "autoprefixer",
+        "postcss-minify",
         "postcss-flexbugs-fixes",
         [
             "postcss-preset-env",
@@ -35,3 +34,12 @@ module.exports = {
         ],
     ]
 }
+// module.exports = {
+//     plugins: [
+//         require('tailwindcss'),
+//         require('autoprefixer'),
+//         require('@fullhuman/postcss-purgecss'),
+//         require('postcss-flexbugs-fixes'),
+//         require('postcss-minify'),
+//     ]
+// }

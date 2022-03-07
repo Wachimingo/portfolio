@@ -15,7 +15,7 @@ export const actions: any = {
                 }
                 //remove password from output
                 user.password = undefined;
-                const token = jwt.sign({ id: user._id }, process.env.SECRET, {
+                const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
                     expiresIn: process.env.JWT_EXPIRES_IN,
                 });
                 res.status(200).json({

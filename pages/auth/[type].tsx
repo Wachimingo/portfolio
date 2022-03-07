@@ -32,7 +32,8 @@ const Auth = memo(({ type, content }: AuthProps) => {
       }
       setSession(newSession);
     },
-    "signin": () => { }
+    "signin": () => { },
+    "signup": () => { },
   }
 
   useEffect(() => {
@@ -46,62 +47,65 @@ const Auth = memo(({ type, content }: AuthProps) => {
         <meta name="Auth" content={`${type}`} />
       </Head>
 
-      <section className="inline-block w-max">
+      <section className="inline-block sm:w-2/3 lg:w-1/2">
         <h1 className="text-2xl">{type}</h1>
         <br />
-        <div className='xsm:w-screen lg:w-80'>
-          <form
-            className='bg-slate-800 shadow-md rounded px-8 pt-6 pb-8 mb-4 bg-slate-800'
-            onSubmit={
-              type === 'signin'
-                ? handleSubmit((data: any) => signin(data, setSession, router))
-                : handleSubmit((data: any) => signup(data, signIn))}
-          >
+        <form
+          className='bg-slate-800 shadow-md rounded px-8 pt-6 pb-8 mb-4'
+          onSubmit={
+            type === 'signin'
+              ? handleSubmit((data: any) => signin(data, setSession, router))
+              : handleSubmit((data: any) => signup(data, signIn))
+          }
+        >
 
-            {/**@name is only render when the auth type is signup, and it is only use to validate that password is correct*/}
-            {
-              type === 'signup' ?
-                <div className="mb-4">
-                  <input {...register("name", { required: true, pattern: /^[a-zA-Z ]+$/ })} type="text" id="name" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
-                  <label className="block text-white text-sm font-bold mb-2" htmlFor="name">{content.name}</label>
-                </div>
-                : undefined
-            }
+          {/**@name is only render when the auth type is signup, and it is only use to validate that password is correct*/}
+          {
+            type === 'signup' ?
+              <div className="mb-4">
+                <br />
+                <label className="block text-white text-sm font-bold mb-2" htmlFor="name">{content.name}</label>
+                <br />
+                <input {...register("name", { required: true, pattern: /^[a-zA-Z ]+$/ })} type="text" id="name" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
+              </div>
+              : undefined
+          }
 
-            {/**@Email input */}
-            <div className="mb-4">
-              <input {...register("email", { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })} type="email" id="username" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
-              <label className="block text-white text-sm font-bold mb-2" htmlFor="username">{content.email}</label>
-            </div>
-            {errors.email && <p className="block text-red-500 text-sm font-bold mb-2">{content.emailWarning}</p>}
+          {/**@Email input */}
+          <div className="mb-4">
+            <label className="block text-white text-sm font-bold mb-2" htmlFor="username">{content.email}</label>
+            <input {...register("email", { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })} type="email" id="username" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
 
-            {/**@Password input */}
+          </div>
+          {errors.email && <p className="block text-red-500 text-sm font-bold mb-2">{content.emailWarning}</p>}
 
-            <div className="mb-4">
-              <input {...register("password", { required: true })} type="password" id="password" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
-              <label className="block text-white text-sm font-bold mb-2" htmlFor="password">{content.password}</label>
-            </div>
-            {errors.password && <p className="block text-red-500 text-sm font-bold mb-2">{content.passwordWarning}</p>}
+          {/**@Password input */}
 
-            {/**@PasswordConfirm is only render when the auth type is signup, and it is only use to validate that password is correct*/}
-            {
-              type === 'signup' ?
-                <div className="mb-4">
-                  <input {...register("passwordConfirm", {
-                    required: true, validate: {
-                      matchPassword: () => watch("password") === watch("passwordConfirm")
-                    }
-                  })} type="password" id="passwordConfirm" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
-                  <label className="block text-white text-sm font-bold mb-2" htmlFor="passwordConfirm">{content.passwordConfirm}</label>
-                </div>
-                : undefined
-            }
-            {errors.passwordConfirm && <p className="block text-red-500 text-sm font-bold mb-2">{content.passwordConfirmWarning}</p>}
+          <div className="mb-4">
+            <label className="block text-white text-sm font-bold mb-2" htmlFor="password">{content.password}</label>
+            <input {...register("password", { required: true })} type="password" id="password" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
+          </div>
+          {errors.password && <p className="block text-red-500 text-sm font-bold mb-2">{content.passwordWarning}</p>}
 
-            {/**@Submit button */}
-            <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{type === 'signin' ? 'Ingresar' : 'Registrarse'}</button>
-          </form>
-        </div>
+          {/**@PasswordConfirm is only render when the auth type is signup, and it is only use to validate that password is correct*/}
+          {
+            type === 'signup' ?
+              <div className="mb-4">
+                <label className="block text-white text-sm font-bold mb-2" htmlFor="passwordConfirm">{content.passwordConfirm}</label>
+                <input {...register("passwordConfirm", {
+                  required: true, validate: {
+                    matchPassword: () => watch("password") === watch("passwordConfirm")
+                  }
+                })} type="password" id="passwordConfirm" className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline invalid:border-red-500" />
+
+              </div>
+              : undefined
+          }
+          {errors.passwordConfirm && <p className="block text-red-500 text-sm font-bold mb-2">{content.passwordConfirmWarning}</p>}
+
+          {/**@Submit button */}
+          <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{type === 'signin' ? 'Ingresar' : 'Registrarse'}</button>
+        </form>
       </section>
       {/* Other signin or signup options */}
       <section className='inline'>

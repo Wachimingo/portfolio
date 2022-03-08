@@ -45,7 +45,7 @@ const Home = ({ content, locale, skills, categories }: any) => {
           src="/assets/profile.jpg"
         />
       </main>
-      <div className="relative bottom-44 h-80 overflow-scroll">
+      <div className="relative bottom-40 h-96 overflow-scroll overflow-x-hidden">
         {
           categories.map((cat: any) => {
             if (cat.relatedTo === 'skills') {

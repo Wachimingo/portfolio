@@ -5,12 +5,12 @@ import './../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.min.css'
 import { ToastContainer } from 'react-toastify';
 import { Fragment } from 'react'
-import Script from 'next/script';
+// import Script from 'next/script';
 function MyApp({ Component, pageProps }) {
   const Layout = Component.Layout ?? Fragment;
   return (
     <>
-      <Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
+      {/* <Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
       <Script strategy="lazyOnload">
         {`
           window.dataLayer = window.dataLayer || [];
@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
           page_path: window.location.pathname,
           });
       `}
-      </Script>
+      </Script> */}
       <Layout>
         <AuthProvider>
           <MainNavbar />

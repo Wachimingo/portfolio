@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import projectLayout from "../../../layouts/projectLayout";
 import Image from 'next/image'
 import Carousel from "../../../components/Carousel";
-import dbConnect from '../../../utils/dbConnection';
+import { connect } from "mongoose"
 import Locale from "../../../models/localeModel";
 import Head from "next/head";
 
@@ -88,8 +88,9 @@ export default index;
 index.Layout = projectLayout;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
     try {
-        await dbConnect();
+        const cn = await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
         const res = await fetch(`${process.env.managementBackend}/api/v1/menu/forToday?limit=10`, {
             method: 'GET',
             mode: 'cors',

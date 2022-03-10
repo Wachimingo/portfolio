@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import dbConnect from '../../utils/dbConnection';
+// import "../../utils/dbConnection";
 import ProjectModel from "../../models/projectModel";
 
 type Project = {
@@ -51,10 +51,11 @@ const Projects = ({ items }: ProjectsProps) => {
 }
 
 export default Projects;
-
+import { connect } from "mongoose"
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
     try {
-        await dbConnect();
+        const cn = await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
         const data = await ProjectModel.find({}).where('locale').equals(context.locale).select('-__v');
         return {
             props: {

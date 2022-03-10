@@ -1,15 +1,14 @@
-import type { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic'
 import Head from 'next/head';
-const classes = require('./../../../../styles/catalog.module.css');
 import { useState, useContext, useEffect } from 'react';
-import AuthContext from '../../../../contexts/authContext';
-import { Card, ControlButtons } from '../../../../components/Card'
-import { Dish, Favs, Categories } from '../../../../interfaces/DishInterface';
-import { imageHandler } from '../../../../controllers/imgController';
-import { toast } from 'react-toastify';
-import projectLayout from '../../../../layouts/projectLayout';
 import { useRouter } from 'next/router';
+import { Card } from '../../../../components/Card';
+import { CatalogControls } from '../../../../components/CatalogComponents';
+import AuthContext from '../../../../contexts/authContext';
+import { imageHandler } from '../../../../controllers/imgController';
+import { Dish, Favs, Categories } from '../../../../interfaces/DishInterface';
+import projectLayout from '../../../../layouts/projectLayout';
+import { GetServerSideProps } from 'next';
 
 const CatalogModal = dynamic<any>(() => import('../../../../components/modals/CatalogModal').then((mod) => mod.CatalogModal));
 
@@ -48,11 +47,15 @@ const catalog = ({ items, favs, categories, token, userId, error, role }: propsT
             <div className={showModal === '' ? 'pointer-events-none' : ''}>
                 <h1 className='text-2xl'>{router.locale === 'en' ? 'Catalog' : 'Catalogo'}</h1>
                 {
-                    role ?
-                        role !== 'user'
-                            ? <button type="button" className={`bg-cyan-500 text-white samsungS8:ml-0 ${classes.addButton}`} onClick={() => setShowModal('')}>+</button>
-                            : undefined
-                        : undefined
+                    role && role === 'user' ? undefined
+                        :
+                        <button
+                            type="button"
+                            className="absolute bg-cyan-500 text-white rounded-full w-16 h-16 bottom-4 right-4 hover:opacity-50"
+                            onClick={() => setShowModal('')}
+                        >
+                            +
+                        </button>
                 }
                 <br />
                 {/* Display items section */}
@@ -64,18 +67,19 @@ const catalog = ({ items, favs, categories, token, userId, error, role }: propsT
                                 id={`itemBody_${item!._id}`}
                                 className={
                                     item!.forToday
-                                        ? `xl:inline-block xl:mx-2 w-96 overflow-hidden border-2 border-graycontent-center  ${classes.catalog}`
-                                        : `xl:inline-block xl:mx-2 overflow-hidden w-96 sm:ml-3  content-center ${classes.catalog}`} >
+                                        ? 'relative xl:inline-block xl:mx-2 w-fit left-0 overflow-hidden border-2 border-gray content-center z-10'
+                                        : 'relative xl:inline-block xl:mx-2 w-fit left-0 overflow-hidden content-center z-10'} >
                                 {
                                     session?.user.role === 'admin' ?? 'helper'
+                                        // true
                                         ?
-                                        <ControlButtons
+                                        <CatalogControls
                                             token={token}
                                             item={item}
                                             favs={favs}
                                             setItem={setItem}
                                             setShowModal={setShowModal}
-                                            _id={userId}
+                                            userId={userId}
                                         />
                                         : undefined
                                 }
@@ -90,8 +94,8 @@ const catalog = ({ items, favs, categories, token, userId, error, role }: propsT
                 session?.user?.role === 'admin' ?? 'helper'
                     ?
                     <CatalogModal
-                        showModal={showModal} //Replace showModal with 'true' to open the modal for modifications
-                        // show={'true'}
+                        showModal={showModal} //Replace showModal with '' to open the modal for modifications
+                        // show={''}
                         items={items}
                         item={item}
                         image={image}

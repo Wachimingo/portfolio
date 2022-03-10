@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { actions } from "../../locale/actions";
+import { actions } from "./actions";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-    const { type } = req.query;
-    await actions[req.method ?? 'default'][type[0] ?? 'default'](req, res);
+    req.body.type ?
+        await actions[req.method ?? 'default'][req.body.type ?? 'default'](req, res)
+        :
+        await actions[req.method ?? 'default'](req, res)
 }

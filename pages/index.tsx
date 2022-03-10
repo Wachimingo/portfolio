@@ -7,7 +7,8 @@ import { connect } from "mongoose"
 import Locale from "../models/localeModel";
 import Skills from "../models/skillsModel";
 import Categories from "../models/categoriesModel";
-import { FaFacebookF, FaLinkedinIn, FaRegEnvelope } from 'react-icons/fa';
+import { FaArrowAltCircleDown, FaArrowDown, FaFacebookF, FaLinkedinIn, FaRegEnvelope } from 'react-icons/fa';
+import Link from 'next/link';
 // import Link from 'next/link';
 
 const Home = ({ content, locale, skills, categories }: any) => {
@@ -20,14 +21,14 @@ const Home = ({ content, locale, skills, categories }: any) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`text-white text-2xl relative`}>
-        <style jsx>
+        <style jsx global>
           {`
             .curve {
               z-index: -100;
               margin-top: -1.2vh;
               /* display: block; */
               box-sizing: border-box;
-              height: 500px;
+              height: 400px;
               background-color: #34495E;
               clip-path: ellipse(300% 100% at 275% 0%);
           }
@@ -45,28 +46,46 @@ const Home = ({ content, locale, skills, categories }: any) => {
           src="/assets/profile.jpg"
         />
       </main>
-      <div className="relative bottom-40 h-96 overflow-scroll overflow-x-hidden">
-        {
-          categories.map((cat: any) => {
-            if (cat.relatedTo === 'skills') {
-              return (
-                <section className="mb-12">
-                  <h3 className="text-xl">{cat.name}</h3>
-                  <br />
-                  {
-                    skills.filter((skill: any) => skill.category.name === cat.name).map((item: any) => {
-                      return (
-                        <SkillCard skill={item} />
-                      )
-                    })
-                  }
-                </section>
-              )
-            } else undefined
-          })
-        }
-      </div>
-      <footer className='bg-slate-800 text-white text-xl absolute bottom-0 w-screen'>
+      <br />
+      <br />
+      <section>
+        <h1 className='relative text-2xl bottom-48'>{content.skills}</h1>
+        <div className="relative bottom-40 right-4 h-96 overflow-hidden">
+          {
+            categories.map((cat: any) => {
+              if (cat.relatedTo === 'skills') {
+                return (
+                  <section className="mb-12">
+                    <h3 className="text-xl">{cat.name}</h3>
+                    <br />
+                    {
+                      skills.filter((skill: any) => skill.category.name === cat.name).map((item: any) => {
+                        return (
+                          <SkillCard skill={item} />
+                        )
+                      })
+                    }
+                  </section>
+                )
+              } else undefined
+            })
+          }
+        </div>
+        <div className='relative bottom-32 inline-block '>
+          <div className='ml-16 text-2xl animate-bounce w-6 h-6 '>
+            <FaArrowDown />
+          </div>
+          <Link href={'/skills'} passHref={true}>
+            <a
+              className="block bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+            >
+              {content.skillsButton}
+            </a>
+          </Link>
+        </div>
+      </section>
+      <br />
+      <footer className='relative bottom-0 bg-slate-800 text-white text-xl'>
         <div className='inline-block mx-2'>
           <h2>{locale === 'en' ? 'Find me in' : 'Encuentrame en'}:</h2>
           <span className='cursor-pointer hover:bg-white hover:text-black pr-1 pl-1 border border-white mr-2'>
@@ -97,8 +116,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const cn = await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
     //Creating vars with promises to await them all in parallel
     const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('mainIndex').select('-__v');
-    const getSkills = Skills.find({}).where('locale').equals(context.locale).select('-__v -locale').populate('category');
-    const getCategories = Categories.find({}).where('locale').equals(context.locale).select('-__v');
+    const getSkills = Skills.find({}).where('locale').equals(context.locale).select('-__v -locale').populate('category').limit(5);
+    const getCategories = Categories.find({}).where('locale').equals(context.locale).select('-__v').limit(3);
     //Await all promises in parallel
     const [locale, skills, categories] = await Promise.all([getLocale, getSkills, getCategories]);
 

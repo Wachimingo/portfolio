@@ -90,7 +90,7 @@ export const modifyItem = async (dish: any, item: Dish, image: any, token: strin
         })
         document.location.reload();
     } else {
-        toast.error(data.error.message);
+        toast.error(data.error);
     }
 }
 
@@ -112,7 +112,7 @@ export const deleteItem = async (id: string, token: string) => {
     if (response.ok) {
         toast.info(data)
     } else {
-        toast.error(data)
+        toast.error(data.error)
     }
 }
 
@@ -135,7 +135,7 @@ export const changeStateOfItem = async (id: string, state: boolean, token: strin
     if (response.ok) {
         toast.success(state ? 'Activado' : 'Desactivado')
     } else {
-        toast.error(data.error.message);
+        toast.error(data.error);
     }
 }
 

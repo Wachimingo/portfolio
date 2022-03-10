@@ -9,7 +9,7 @@ module.exports = {
   ],
   theme: {
     screens: {
-      'xs': '365px',
+      'xs': '360px',
       ...defaultTheme.screens,
     },
     extend: {
@@ -21,9 +21,15 @@ module.exports = {
         '1/2': '50%',
         '2/3': '90%',
       },
-      left: {
-        '1/2': '50%',
+      height: {
+        '100': '45vh'
       },
+      left: {
+        '1/2': '35%',
+      },
+      bottom: {
+        '100': '45vh'
+      }
     },
   },
   plugins: [],

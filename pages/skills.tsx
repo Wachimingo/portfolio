@@ -22,7 +22,7 @@ const skills = ({ skills, content, categories }: any) => {
                     categories.map((cat: any) => {
                         if (cat.relatedTo === 'skills') {
                             return (
-                                <section className="mb-12">
+                                <section className="mb-12 relative right-4">
                                     <h3 className="text-xl">{cat.name}</h3>
                                     <br />
                                     {

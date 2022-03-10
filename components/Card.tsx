@@ -1,19 +1,5 @@
-import { FaAngleUp, FaTrash, FaCog, FaRegFolderOpen, FaStar } from "react-icons/fa";
-import { deleteItem, changeStateOfItem, updateItem, setAsFavorite, removeFavorite } from '../controllers/menuController';
-import Link from 'next/link'
-import { useState } from "react";
-import { Dish, Favs, Order } from "../interfaces/DishInterface";
+import { Dish, Order } from "../interfaces/DishInterface";
 import { updateStatus } from "../controllers/ordersController";
-const classes = require('../styles/catalog.module.css');
-
-const toggleCard = (id: string) => {
-    document.getElementById(`itemBody_${id}`)?.classList.toggle(`${classes.itemIsForToday}`)
-    document.getElementById(`activate_${id}`)?.classList.toggle(`${classes.isActive}`)
-}
-
-const toggleStar = (id: string) => {
-    document.getElementById(`star_${id}`)?.classList.toggle(`${classes.isFavorite}`)
-}
 
 type CardProps = {
     item: Dish,
@@ -39,67 +25,6 @@ export const Card = ({ item }: CardProps) => {
     )
 }
 
-type ControlButtonsProps = {
-    token: string,
-    item: Dish,
-    favs: any, // setting Favs[] throw an error as it doesn't have the .include() method
-    setItem: Function,
-    setShowModal: Function,
-    _id: string
-}
-
-export const ControlButtons = ({ token, item, favs, setItem, setShowModal, _id }: ControlButtonsProps) => {
-    const [state, setState] = useState(item!.forToday)
-    return (
-        <div className="xsm:text-2xl mt-2">
-            <span
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Eliminar"
-                className={`inline-block  ${classes.controlButtons}`}
-                onClick={() => deleteItem(item!._id, token)}>
-                <FaTrash />
-            </span>
-            <span
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Modificar"
-                className={`inline-block  ${classes.controlButtons}`}
-                onClick={() => updateItem(item, setShowModal, setItem)}>
-                <FaCog />
-            </span>
-            <span
-                id={`activate_${item?._id}`}
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title={item?.forToday ? "Desactivar" : "Activar"}
-                className={item?.forToday ? `inline-block  ${classes.controlButtons} ${classes.isActive}` : `inline-block  ${classes.controlButtons}`}
-                onClick={() => changeStateOfItem(item!._id, state, token, toggleCard(item!._id), setState(!state))}>
-                <FaAngleUp />
-            </span>
-            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Review" className={`inline-block  ${classes.controlButtons}`}>
-                <Link href={`/projects/comedor/menu/review/${item?._id}`} passHref>
-                    <a><FaRegFolderOpen /></a>
-                </Link>
-            </span>
-            <span
-                id={`star_${item?._id}`}
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Marcar como favorito"
-                className={favs.includes(item!._id) ? `inline-block  ${classes.controlButtons} ${classes.isFavorite}` : `inline-block  ${classes.controlButtons}`}
-                onClick={() => {
-                    favs.includes(item!._id)
-                        ?
-                        removeFavorite(item!._id, _id, token, toggleStar(item!._id))
-                        :
-                        setAsFavorite(item!._id, _id, token, toggleStar(item!._id))
-                }}>
-                <FaStar />
-            </span>
-        </div>
-    )
-}
 type OrderCardProps = {
     order: Order,
     role: string,

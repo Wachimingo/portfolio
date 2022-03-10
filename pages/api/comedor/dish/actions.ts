@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export const actions: any = {
     "GET": {
-        'all': async (req: NextApiRequest, res: NextApiResponse) => {
+        "all": async (req: NextApiRequest, res: NextApiResponse) => {
             const result = await fetch(`${process.env.managementBackend}/api/v1/menu?limit=1000`, {
                 method: 'GET',
             })
@@ -17,7 +17,7 @@ export const actions: any = {
                 })
             }
         },
-        'one': async (req: NextApiRequest, res: NextApiResponse) => {
+        "one": async (req: NextApiRequest, res: NextApiResponse) => {
             const result = await fetch(`${process.env.managementBackend}/api/v1/menu/${req.query.id}`, {
                 method: 'GET',
             })
@@ -77,6 +77,7 @@ export const actions: any = {
                 })
             })
             const data = await result?.json();
+
             if (result?.ok) {
                 return res.status(200).json({
                     data

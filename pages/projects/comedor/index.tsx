@@ -2,8 +2,6 @@ import { GetServerSideProps } from "next";
 import projectLayout from "../../../layouts/projectLayout";
 import Image from 'next/image'
 import Carousel from "../../../components/Carousel";
-const classes = require('../../../styles/comedorIndex.module.css');
-// import "../../../utils/dbConnection";
 import { connect } from "mongoose"
 import Locale from "../../../models/localeModel";
 import Head from "next/head";

@@ -25,7 +25,7 @@ export const CatalogModal: any = memo((props: any) => {
     }
 
     return (
-        <div id="catalog-modal" className={`relative ${props.showModal} ${modalBox} ${classes.aligment2}`}>
+        <div id="catalog-modal" className={`absolute top-16 left-1/2 ${props.showModal} ${modalBox} z-30`}>
             <div className="relative w-full max-w-2xl px-4 h-full md:h-auto">
                 <div className="bg-white rounded-lg shadow relative dark:bg-gray-700">
                     <div className="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-600">

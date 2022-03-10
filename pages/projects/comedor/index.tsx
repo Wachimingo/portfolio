@@ -90,7 +90,7 @@ index.Layout = projectLayout;
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
     try {
-        const cn = await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
+        await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
         const res = await fetch(`${process.env.managementBackend}/api/v1/menu/forToday?limit=10`, {
             method: 'GET',
             mode: 'cors',

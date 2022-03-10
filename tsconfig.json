@@ -25,14 +25,6 @@
     "**/*.tsx",
     "**/**/*.ts",
     "**/**/*.tsx",
-    "components/checkouts/CheckoutForm.js",
-    "models/billModel.ts",
-    "pages/_app.js",
-    "components/localeSwitcher.js",
-    "pages/x.js",
-    "components/Toast.js",
-    "models/skillsModel.ts",
-    "utils/dbConnection.js"
   ],
   "exclude": [
     "node_modules",
@@ -43,6 +35,14 @@
     "./components/*.js",
     "./pages/_app.js",
     "./pages/api/auth/*.js",
-    "./pages/api/*.js"
+    "./pages/api/*.js",
+    "components/checkouts/CheckoutForm.js",
+    "models/billModel.ts",
+    "pages/_app.js",
+    "components/localeSwitcher.js",
+    "pages/*.js",
+    "components/*.js",
+    "models/*.ts",
+    "utils/*.js"
   ]
 }

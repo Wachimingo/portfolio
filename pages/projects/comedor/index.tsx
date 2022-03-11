@@ -5,6 +5,7 @@ import Carousel from "../../../components/Carousel";
 import { connect } from "mongoose"
 import Locale from "../../../models/localeModel";
 import Head from "next/head";
+import dbConnect from "../../../utils/dbConnection";
 
 const index = ({ items, content, error, locale }: any) => {
     if (error) {
@@ -88,9 +89,8 @@ export default index;
 index.Layout = projectLayout;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
     try {
-        await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
+        await dbConnect();
         const res = await fetch(`${process.env.managementBackend}/api/v1/menu/forToday?limit=10`, {
             method: 'GET',
             mode: 'cors',

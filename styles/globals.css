@@ -38,3 +38,31 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+
+.curve {
+  z-index: -100;
+  margin-top: -1.2vh;
+  /* display: block; */
+  box-sizing: border-box;
+  height: 400px;
+  background-color: #34495E;
+  clip-path: ellipse(300% 100% at 275% 0%);
+}
+.semicircle {
+  position: relative;
+  margin-top: -6vh;
+  background: #34495E;
+  height: 4vh;
+}            
+.semicircle::before {
+  position: absolute;
+  content: '';
+  left: 50%;
+  z-index: -100;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  background: inherit;
+  transform: translateX(-50%) translateY(50%);
+  bottom: 20px;
+}

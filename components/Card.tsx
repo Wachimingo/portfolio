@@ -1,5 +1,7 @@
 import { Dish, Order } from "../interfaces/DishInterface";
 import { updateStatus } from "../controllers/ordersController";
+import { FaExternalLinkAlt } from "react-icons/fa";
+import Link from "next/link";
 
 type CardProps = {
     item: Dish,
@@ -124,13 +126,31 @@ export const OrderControls = ({ role, token, orderId, currentStatus, locale }: a
     )
 }
 
-export const SkillCard = ({ skill }: any) => {
+export const SkillCard = ({ item }: any) => {
     return (
-        <div className='rounded shadow-lg inline-block overflow-hidden w-80 h-36 ml-8 break-words'>
-            <img className="w-8 inline-block" src={skill.icon} />
-            <h2 className="inline-block">{skill.name}</h2>
-            <progress className="inline-block ml-8" id={`skill_${skill.name}`} value={skill.level} max="100">{skill.level}%</progress>
-            <p>{skill.description}</p>
+        <div className='rounded shadow-lg inline-block overflow-hidden w-80 h-fit ml-8 break-words'>
+            <br />
+            <img className="w-8 inline-block" src={item.icon} />
+            <h2 className="inline-block">{item.name ?? <div className="bg-slate-200 text-slate-200">_________</div>}</h2>
+            <progress className="inline-block ml-8" id={`skill_${item.name}`} value={item.level} max="100">{item.level}%</progress>
+            <p>{item.description}</p>
+            <br />
         </div>
+    );
+}
+
+export const CertCard = ({ item }: any) => {
+    return (
+        <Link href={item.link ?? ''} passHref>
+            <a target="_blank" rel="noopener noreferrer">
+                <div className='rounded shadow-lg inline-block overflow-hidden w-80 h-fit ml-8 break-words hover:cursor-pointer hover:bg-slate-300'>
+                    <br />
+                    <img className="w-8 inline-block" src={item.icon} />
+                    <h2 className="inline-block">{item.name ?? <div className="bg-slate-200 text-slate-200">_________</div>}</h2>
+                    <p>{item.description}</p>
+                    <br />
+                </div>
+            </a>
+        </Link>
     );
 }

@@ -8,6 +8,8 @@ import { signIn } from "next-auth/react"
 import { FaFacebook } from 'react-icons/fa'
 import { AuthProps } from '../../interfaces/AuthInterface';
 import { signin, signup } from '../../controllers/authController';
+import dbConnect from '../../utils/dbConnection';
+import Locale from "../../models/localeModel";
 
 const Auth = memo(({ type, content }: AuthProps) => {
   const router = useRouter();
@@ -120,14 +122,9 @@ const Auth = memo(({ type, content }: AuthProps) => {
 
 export default Auth;
 
-// import "../../utils/dbConnection";
-import { connect } from "mongoose"
-import Locale from "../../models/localeModel";
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
   try {
-    connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
+    await dbConnect();
     const type = context.query.type;
     // const providers = await getProviders();
     // console.log(type)

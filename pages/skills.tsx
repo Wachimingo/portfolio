@@ -1,11 +1,10 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-// import "../utils/dbConnection";
-import { connect } from "mongoose"
 import Locale from "../models/localeModel";
 import SkillsModel from "../models/skillsModel";
 import Categories from "../models/categoriesModel";
 import { SkillCard } from "../components/Card";
+import dbConnect from "../utils/dbConnection";
 
 const skills = ({ skills, content, categories }: any) => {
     return (
@@ -28,7 +27,7 @@ const skills = ({ skills, content, categories }: any) => {
                                     {
                                         skills.filter((skill: any) => skill.category.name === cat.name).map((item: any) => {
                                             return (
-                                                <SkillCard skill={item} />
+                                                <SkillCard item={item} />
                                             )
                                         })
                                     }
@@ -45,9 +44,8 @@ const skills = ({ skills, content, categories }: any) => {
 export default skills;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const dev_db_url: string = 'mongodb://localhost:27017/portfolio'
     try {
-        const cn = await connect(process.env.MONGODB_URI || dev_db_url, { useNewUrlParser: true, useUnifiedTopology: true } as any)
+        await dbConnect();
         //Creating vars with promises to await them all in parallel
         const getLocale = Locale.find({}).where('locale').equals(context.locale).where('pageName').equals('skills').select('-__v');
         const getSkills = SkillsModel.find({}).where('locale').equals(context.locale).select('-__v -locale').populate('category');
